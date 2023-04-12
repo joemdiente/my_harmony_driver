@@ -28,7 +28,6 @@
 // *****************************************************************************
 
 #include "app.h"
-#include "system/console/sys_console.h"
 
 // *****************************************************************************
 // *****************************************************************************
@@ -130,8 +129,7 @@ void APP_Tasks ( void )
 
         case APP_STATE_SERVICE_TASKS:
         {
-            SYS_CONSOLE_MESSAGE("Hello World!! - From SYSCONSOLE_MESSAGE\r\n");
-            while(1);
+
             break;
         }
 

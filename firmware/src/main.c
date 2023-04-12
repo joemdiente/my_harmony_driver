@@ -25,7 +25,8 @@
 #include <stddef.h>                     // Defines NULL
 #include <stdbool.h>                    // Defines true
 #include <stdlib.h>                     // Defines EXIT_FAILURE
-#include "definitions.h"                // SYS function prototypes
+#include "definitions.h"
+#include "driver/apa102/drv_apa102.h"
 
 
 // *****************************************************************************
@@ -34,11 +35,14 @@
 // *****************************************************************************
 // *****************************************************************************
 
+DRV_HANDLE rgbHandle;
+
 int main ( void )
 {
     /* Initialize all modules */
     SYS_Initialize ( NULL );
-
+    
+    SYS_CONSOLE_MESSAGE("\r\nEnd\r\n");
     while ( true )
     {
         /* Maintain state machines of all polled MPLAB Harmony modules. */
