@@ -9,7 +9,7 @@
             <sourceEncoding>ISO-8859-1</sourceEncoding>
             <make-dep-projects/>
             <sourceRootList>
-                <sourceRootElem>../src/config/apa102/driver/apa102</sourceRootElem>
+                <sourceRootElem>../..</sourceRootElem>
             </sourceRootList>
             <confList>
                 <confElem>

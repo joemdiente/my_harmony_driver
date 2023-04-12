@@ -4,8 +4,9 @@ Pre-requisite:
 
 Initial Steps:
 - Clone at91bootstrap
-- Copy "./at9bootstrap_sama7g54_config" to "at91bootstrap/.config"
-- In MPLAB X, open at91bootstrap as project.
+- In MPLABX, open "at91bootstrap" as project.
+- Open Project Properties and go to KConfig.
+- Load "my_harmony_driver/at9bootstrap_sama7g54_config" and click "Apply"
 - Run "Clean and Build"
 - In Harmony V3 Project, open Project Properties > Select "JLINK" in Hardware Tool then click "Apply".
 - "Bootstrap" should show under Categories in Project Properties Box.
