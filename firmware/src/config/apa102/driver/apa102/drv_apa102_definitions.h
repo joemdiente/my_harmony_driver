@@ -133,7 +133,8 @@ typedef struct
  * 00000001     -     1/256
  * ........     -     .....
  * 11111111     -     255/256
- * Note: Structure below partially represents APA102 Protocol
+ * Note: Structure below should represent APA102 Protocol
+ * AND is sent in order 
  */
 typedef struct __attribute__((__packed__))
 {
@@ -144,7 +145,17 @@ typedef struct __attribute__((__packed__))
     uint8_t blue          :8;
     uint8_t green         :8;
     uint8_t red           :8;
-} DRV_APA102_LED_FRAMES;
+} DRV_APA102_PAYLOAD_LED_FRAMES;
+typedef uint32_t DRV_APA102_PAYLOAD_START_FRAME;
+typedef uint32_t DRV_APA102_PAYLOAD_END_FRAME;
+typedef enum
+{
+    SFRAME_VAL = 0x00000000,
+    EFRAME_VAL = 0xFFFFFFFF,  
+} DRV_APA102_FRAME_TYPE;
+
+typedef uint16_t DRV_APA102_PAYLOAD_SIZE;
+typedef uint32_t DRV_APA102_PAYLOAD_PTR; 
 
 // function prototype of application callback function
 typedef void (*DRV_APA102_APP_CALLBACK)(DRV_APA102_EVENT event, uintptr_t context);

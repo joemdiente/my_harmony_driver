@@ -42,7 +42,7 @@ int main ( void )
     /* Initialize all modules */
     SYS_Initialize ( NULL );
     
-    SYS_CONSOLE_MESSAGE("End\r\n");
+    SYS_CONSOLE_MESSAGE("End of Test\r\n");
     
     while ( true )
     {

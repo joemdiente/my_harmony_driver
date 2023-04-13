@@ -8,6 +8,8 @@ void DRV_APA102_DEBUG_FILL_RGBDATA(DRV_APA102_OBJ* obj)
     /* RGBDATA Filler */
     for(i = 0; i < obj->confParam.ledCnt; i++)
     {
+        obj->rgbData[i].padBits = 0b111;
+        obj->rgbData[i].ledBrightness = 0b00000;
         obj->rgbData[i].red = 'r';
         obj->rgbData[i].green = 'g';
         obj->rgbData[i].blue = 'b';

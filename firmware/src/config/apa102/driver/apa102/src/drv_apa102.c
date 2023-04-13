@@ -42,8 +42,11 @@ SYS_MODULE_OBJ DRV_APA102_Initialize(
 {
     DRV_APA102_OBJ* dObj     = NULL;
     DRV_APA102_INIT* RGBLedInit = (DRV_APA102_INIT*)init;
-    uint16_t i = 0;
-    
+
+#ifdef DRV_APA102_DEBUG
+        SYS_CONSOLE_MESSAGE("INFO: APA102 Driver Initialize\r\n");
+#endif
+        
     /* Validate the request */
     if(drvIndex >= DRV_APA102_INSTANCES_NUMBER)
     {
@@ -66,10 +69,11 @@ SYS_MODULE_OBJ DRV_APA102_Initialize(
         return SYS_MODULE_OBJ_INVALID;
     }    
     
-    //Get Configuration Parameters
-    {
-        dObj->confParam = *config;
-    }
+    //Get configuration parameters
+    dObj->confParam = *config;
+    
+    //Get plibInterface pointer
+    dObj->plibInterface = RGBLedInit->plibInterface;
     
     /* Does the CLK within Device Specifications? */
     if (dObj->confParam.transferParams.clkFreq >= DRV_APA102_MAX_CLK ||
@@ -81,35 +85,6 @@ SYS_MODULE_OBJ DRV_APA102_Initialize(
 #endif
         return SYS_MODULE_OBJ_INVALID;
     }
-
-    /* Check Driver Operation */
-    if (dObj->confParam.drvOper == DRV_APA102_LED_STRIP)
-    {
-#ifdef DRV_APA102_DEBUG
-        SYS_CONSOLE_MESSAGE("INFO: Mode is LED Strip\r\n");
-#endif
-        //Allocate memory for RGBData
-        dObj->rgbData = OSAL_Malloc(
-                sizeof(DRV_APA102_LED_FRAMES)*(dObj->confParam.ledCnt) - 1);
-        
-        //Initialize RGBData
-        for(i = 0; i < dObj->confParam.ledCnt; i++)
-        {
-            dObj->rgbData[i].padBits = 0b111;
-            dObj->rgbData[i].ledBrightness = 0;
-            dObj->rgbData[i].red = 0;
-            dObj->rgbData[i].green = 0;
-            dObj->rgbData[i].blue = 0;
-        }
-    }
-    else
-    {
-        SYS_CONSOLE_MESSAGE("ERROR: Unknown/Unimplemented Driver Operation\r\n");
-        return SYS_MODULE_OBJ_INVALID;
-    }
-     
-    /* Get plibInterface */
-    dObj->plibInterface = RGBLedInit->plibInterface;
     
     /* Setup SPI Transfer Parameters */
     dObj->confParam.transferParams.clkPhase = DRV_APA102_CLOCK_PHASE_VALID_TRAILING_EDGE;
@@ -123,15 +98,70 @@ SYS_MODULE_OBJ DRV_APA102_Initialize(
         return SYS_MODULE_OBJ_INVALID;
     }
     
-    /* Initialize all LEDS */
-    DRV_APA102_DEBUG_FILL_RGBDATA(dObj);
+    /* Check number of LEDs */
+    if (dObj->confParam.ledCnt <= 0)
+    {
+#ifdef DRV_APA102_DEBUG
+        SYS_CONSOLE_PRINT("ERROR: No. of LEDs: %u is less than 1.\r\n",dObj->confParam.ledCnt);
+#endif
+        return SYS_MODULE_OBJ_INVALID;
+    }
+    else
+    {
+#ifdef DRV_APA102_DEBUG
+        SYS_CONSOLE_PRINT("INFO: No. of LEDs: %u\r\n",dObj->confParam.ledCnt);
+#endif 
+    }
+    /* Check Driver Operation */
+    if (dObj->confParam.drvOper == DRV_APA102_LED_STRIP)
+    {
+#ifdef DRV_APA102_DEBUG
+        SYS_CONSOLE_MESSAGE("INFO: Mode is LED Strip\r\n");
+    }
+    else
+    {
+        SYS_CONSOLE_MESSAGE("ERROR: Unknown/Unimplemented Driver Operation\r\n");
+#endif
+        return SYS_MODULE_OBJ_INVALID;
+    }
+    
+    /* Memory Allocation */
+    //Calculate needed memory
+    dObj->sizePayload = (DRV_APA102_PAYLOAD_SIZE)( 
+            (sizeof(DRV_APA102_PAYLOAD_LED_FRAMES)*(dObj->confParam.ledCnt - 1)) 
+            + sizeof(DRV_APA102_PAYLOAD_START_FRAME) 
+            + sizeof(DRV_APA102_PAYLOAD_END_FRAME)
+            );
 
-    if(dObj->plibInterface->write((uint8_t*)dObj->rgbData, 20) != true)
+    //Allocate memory
+    dObj->ptrPayload = OSAL_Malloc((size_t)dObj->sizePayload);
+
+    //Initialize memory
+    memset(dObj->ptrPayload,0,dObj->sizePayload);
+#ifdef DRV_APA102_DEBUG
+    SYS_CONSOLE_PRINT("INFO: Memory Allocated: %u\r\n",dObj->sizePayload);
+#endif  
+    
+    /* 'Overlay' APA102 Protocol Format to allocated memory 
+     * This allows dynamic allocation of LED data.
+     */
+    dObj->ptrPayload[0] = SFRAME_VAL;                                       //Start Frame 0s*32
+    dObj->rgbData = (DRV_APA102_PAYLOAD_LED_FRAMES*)&dObj->ptrPayload[1];   //Get pointer of index[1] and copy to structure pointer
+    dObj->ptrPayload[dObj->confParam.ledCnt] = EFRAME_VAL;                  //End Frame 1s*32 (Last Index is NULL so use it as End Frame)
+    
+    /* Initialize LEDs */
+    if(dObj->plibInterface->write((uint8_t*)dObj->ptrPayload, dObj->sizePayload) != true)
     {
 #ifdef DRV_APA102_DEBUG
         SYS_CONSOLE_MESSAGE("ERROR: plibInterface Write Failed.\r\n");
 #endif
         return SYS_MODULE_OBJ_INVALID;
+    }
+    else
+    {
+#ifdef DRV_APA102_DEBUG
+        SYS_CONSOLE_MESSAGE("INFO: plibInterface Write Success.\r\n");
+#endif
     }
     
     //TODO: No PLIBEventHandler
