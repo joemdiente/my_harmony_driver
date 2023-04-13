@@ -57,18 +57,14 @@
             <logicalFolder name="cache" displayName="cache" projectFiles="true">
               <itemPath>../src/config/apa102/system/cache/sys_cache.h</itemPath>
             </logicalFolder>
-            <logicalFolder name="command" displayName="command" projectFiles="true">
-              <itemPath>../src/config/apa102/system/command/sys_command.h</itemPath>
-            </logicalFolder>
             <logicalFolder name="console" displayName="console" projectFiles="true">
-              <itemPath>../src/config/apa102/system/console/src/sys_console_uart_definitions.h</itemPath>
               <itemPath>../src/config/apa102/system/console/sys_console.h</itemPath>
-              <itemPath>../src/config/apa102/system/console/src/sys_console_uart.h</itemPath>
               <itemPath>../src/config/apa102/system/console/src/sys_console_local.h</itemPath>
+              <itemPath>../src/config/apa102/system/console/src/sys_console_uart_definitions.h</itemPath>
+              <itemPath>../src/config/apa102/system/console/src/sys_console_uart.h</itemPath>
             </logicalFolder>
             <logicalFolder name="debug" displayName="debug" projectFiles="true">
               <itemPath>../src/config/apa102/system/debug/sys_debug.h</itemPath>
-              <itemPath>../src/config/apa102/system/debug/src/sys_debug_local.h</itemPath>
             </logicalFolder>
             <logicalFolder name="int" displayName="int" projectFiles="true">
               <itemPath>../src/config/apa102/system/int/sys_int_mapping.h</itemPath>
@@ -77,9 +73,6 @@
             <logicalFolder name="ports" displayName="ports" projectFiles="true">
               <itemPath>../src/config/apa102/system/ports/sys_ports_mapping.h</itemPath>
               <itemPath>../src/config/apa102/system/ports/sys_ports.h</itemPath>
-            </logicalFolder>
-            <logicalFolder name="reset" displayName="reset" projectFiles="true">
-              <itemPath>../src/config/apa102/system/reset/sys_reset.h</itemPath>
             </logicalFolder>
             <itemPath>../src/config/apa102/system/system_module.h</itemPath>
             <itemPath>../src/config/apa102/system/system_common.h</itemPath>
@@ -326,21 +319,12 @@
             <logicalFolder name="cache" displayName="cache" projectFiles="true">
               <itemPath>../src/config/apa102/system/cache/sys_cache.c</itemPath>
             </logicalFolder>
-            <logicalFolder name="command" displayName="command" projectFiles="true">
-              <itemPath>../src/config/apa102/system/command/src/sys_command.c</itemPath>
-            </logicalFolder>
             <logicalFolder name="console" displayName="console" projectFiles="true">
               <itemPath>../src/config/apa102/system/console/src/sys_console.c</itemPath>
               <itemPath>../src/config/apa102/system/console/src/sys_console_uart.c</itemPath>
             </logicalFolder>
-            <logicalFolder name="debug" displayName="debug" projectFiles="true">
-              <itemPath>../src/config/apa102/system/debug/src/sys_debug.c</itemPath>
-            </logicalFolder>
             <logicalFolder name="int" displayName="int" projectFiles="true">
               <itemPath>../src/config/apa102/system/int/src/sys_int.c</itemPath>
-            </logicalFolder>
-            <logicalFolder name="reset" displayName="reset" projectFiles="true">
-              <itemPath>../src/config/apa102/system/reset/sys_reset.c</itemPath>
             </logicalFolder>
           </logicalFolder>
           <itemPath>../src/config/apa102/cstartup.S</itemPath>
@@ -430,7 +414,7 @@
         <property key="generate-micro-compressed-code" value="false"/>
         <property key="isolate-each-function" value="true"/>
         <property key="make-warnings-into-errors" value="true"/>
-        <property key="optimization-level" value="-O1"/>
+        <property key="optimization-level" value=""/>
         <property key="place-data-into-section" value="true"/>
         <property key="post-instruction-scheduling" value="default"/>
         <property key="pre-instruction-scheduling" value="default"/>
@@ -492,7 +476,7 @@
         <property key="generate-16-bit-code" value="false"/>
         <property key="generate-cross-reference-file" value="false"/>
         <property key="generate-micro-compressed-code" value="false"/>
-        <property key="heap-size" value="1024"/>
+        <property key="heap-size" value="10000"/>
         <property key="input-libraries" value=""/>
         <property key="kseg-length" value=""/>
         <property key="kseg-origin" value=""/>
@@ -530,7 +514,7 @@
         <property key="generate-micro-compressed-code" value="false"/>
         <property key="isolate-each-function" value="true"/>
         <property key="make-warnings-into-errors" value="false"/>
-        <property key="optimization-level" value="-O1"/>
+        <property key="optimization-level" value=""/>
         <property key="place-data-into-section" value="false"/>
         <property key="post-instruction-scheduling" value="default"/>
         <property key="pre-instruction-scheduling" value="default"/>

@@ -40,7 +40,7 @@ MEMORY
 }
 
 /* Sizes of the stacks used by the application. NOTE: you need to adjust */
-C_STACK_SIZE   = 4096;
+C_STACK_SIZE   = 10000;
 IRQ_STACK_SIZE = 96;
 FIQ_STACK_SIZE = 96;
 SVC_STACK_SIZE = 4096;

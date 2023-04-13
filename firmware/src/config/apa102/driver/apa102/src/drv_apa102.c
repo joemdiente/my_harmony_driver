@@ -19,11 +19,9 @@
 #include <string.h>
 #include <stdio.h>
 
-#ifdef DRV_APA102_DEBUG
-
+//#ifdef DRV_APA102_DEBUG
 #include "driver/apa102/drv_apa102_debug_helper.h"
-//#include "peripheral/flexcom/spi/master/plib_flexcom_spi_master_common.h"
-#endif
+//#endif
 
 /* Driver Instance */
 #define DRV_APA102_INSTANCES_NUMBER            1
@@ -32,12 +30,9 @@
 #define DRV_APA102_MIN_CLK  800000
 #define DRV_APA102_MAX_CLK 1200000
 
-
-
 DRV_APA102_OBJ gDrvRGBLedObj[DRV_APA102_INSTANCES_NUMBER];
 
-
-uint8_t* DRV_APA102_Payload (DRV_APA102_LED_FRAMES* data)
+size_t DRV_APA102_Format_Payload (DRV_APA102_OBJ* dObj)
 {
     /* Build Payload [32 bits/frame]
     * Start Frame                                  End Frame
@@ -58,11 +53,10 @@ uint8_t* DRV_APA102_Payload (DRV_APA102_LED_FRAMES* data)
     * ........     -     .....
     * 11111111     -     255/256
     */
-//    uint32_t startFrame, endFrame;
-//    startFrame = 0;
-//    endFrame = 1;
+//    uint32_t startFrame = 0x00000000;
+//    uint32_t endFrame = 0xFFFFFFFF;
 
-    return (void*)NULL;
+    return (size_t)NULL;
 } 
 
 SYS_MODULE_OBJ DRV_APA102_Initialize(
@@ -102,11 +96,6 @@ SYS_MODULE_OBJ DRV_APA102_Initialize(
         dObj->confParam = *config;
     }
     
-    //TODO: Separate FLEXCOM to the driver
-//    dObj->confParam.transferParams.cPhase = FLEXCOM_SPI_CLOCK_PHASE_TRAILING_EDGE;
-//    dObj->confParam.transferParams.clkPol = FLEXCOM_SPI_CLOCK_POLARITY_IDLE_HIGH;
-//    dObj->confParam.transferParams.dataBits = FLEXCOM_SPI_DATA_BITS_8;
-    
     /* Does the CLK within Device Specifications? */
     if (dObj->confParam.transferParams.clkFreq >= DRV_APA102_MAX_CLK ||
             dObj->confParam.transferParams.clkFreq <= DRV_APA102_MIN_CLK)
@@ -124,9 +113,17 @@ SYS_MODULE_OBJ DRV_APA102_Initialize(
 #ifdef DRV_APA102_DEBUG
         SYS_CONSOLE_MESSAGE("INFO: Mode is LED Strip\r\n");
 #endif
-        //Allocate memory for RGBData
-        dObj->rgbData = OSAL_Malloc(
-                sizeof(DRV_APA102_LED_FRAMES)*(dObj->confParam.ledCnt) - 1);
+        //Compute for RGBData + Start and End Frame
+        dObj->sizeRgbData = sizeof(DRV_APA102_LED_FRAMES)*(dObj->confParam.ledCnt); //Size of rgbData (32bits * number of LEDs)
+        dObj->sizePayload = dObj->sizeRgbData + 4*2;                                //Size of Start (32bits) and End Frame (32bits)
+
+        //Allocate memory for payload 
+        dObj->payload = OSAL_Malloc(dObj->sizePayload);      
+        
+#ifdef DRV_APA102_DEBUG
+        SYS_CONSOLE_MESSAGE("INFO: Memory Allocated\r\n");
+        SYS_CONSOLE_PRINT("INFO: Payload Size: %u\r\n",dObj->sizePayload);
+#endif
         
         //Initialize RGBData
         for(i = 0; i < dObj->confParam.ledCnt; i++)
@@ -141,7 +138,9 @@ SYS_MODULE_OBJ DRV_APA102_Initialize(
     //Add here future implementation
     else
     {
+#ifdef DRV_APA102_DEBUG
         SYS_CONSOLE_MESSAGE("ERROR: Unknown/Unimplemented Driver Operation\r\n");
+#endif  
         return SYS_MODULE_OBJ_INVALID;
     }
      
@@ -160,20 +159,23 @@ SYS_MODULE_OBJ DRV_APA102_Initialize(
         return SYS_MODULE_OBJ_INVALID;
     }
     /* Initialize all LEDS */
-    DRV_APA102_DEBUG_FILL_RGBDATA(dObj);
+//#ifdef DRV_APA102_DEBUG
+//    DRV_APA102_DEBUG_FILL_RGBDATA(dObj);
+//#endif   
+    //Format Payload
+//    dObj->payload->startFrame = 0x00000000;
+//    dObj->payload->ledFrames = dObj->rgbData;
+//    dObj->payload->endFrame = 0xFFFFFFFF;
     
-    // Global should start at E0 (8b11100000)
-    //Build Payload
-    
-    if(dObj->plibInterface->write(
-            (uint8_t*)dObj->rgbData,  
-            20
-            ))
+//    dObj->sizePayload = DRV_APA102_Format_Payload(dObj);
+            
+    //Send Payload
+//    if(dObj->plibInterface->write((uint8_t*)dObj->payload, dObj->sizePayload))
     {
-#ifdef DRV_APA102_DEBUG
+//#ifdef DRV_APA102_DEBUG
         SYS_CONSOLE_MESSAGE("ERROR: plibInterface Write Failed.\r\n");
-#endif
-        return SYS_MODULE_OBJ_INVALID;
+//#endif
+//        return SYS_MODULE_OBJ_INVALID;
     }
     
     

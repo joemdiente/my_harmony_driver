@@ -115,43 +115,43 @@ typedef struct
     DRV_APA102_MODE drvOper;
 }DRV_APA102_CONFIG_PARAMS;
 
-/* APA102 Protocols [32 bits/frame]
-    * Start Frame                                  End Frame
-    *   [0*32]   -   [LED 1]   -   [LED n + 1]   -   [1*32]
-    * LED Frame
-    *   [111 - Global(5b) - Blue(8b) - Green(8b) - Red(8b)] 
-    * 
-    * ::Global is brightness setting
-    * Brightness   -   Driving Current
-    * 00000        -       0/31       
-    * 00001        -       1/31
-    * .....        -       ....
-    * 11111        -       31/31  
-    * ::Blue/Green/Red are LEDs
-    * Data         -   Duty Cycle
-    * 00000000     -     0/256
-    * 00000001     -     1/256
-    * ........     -     .....
-    * 11111111     -     255/256
-    */
+/* APA102 Protocol [32 bits/frame]
+* Start Frame   LED Frame/s                     End Frame
+*   [0*32]   -   [LED 1]   -   [LED n + 1]   -   [1*32]
+* LED Frame
+*   [111 - Global(5b) - Blue(8b) - Green(8b) - Red(8b)] 
+* 
+* ::Global is brightness setting
+* Brightness   -   Driving Current
+* 00000        -       0/31       
+* 00001        -       1/31
+* .....        -       ....
+* 11111        -       31/31  
+* ::Blue/Green/Red are LEDs
+* Data         -   Duty Cycle
+* 00000000     -     0/256
+* 00000001     -     1/256
+* ........     -     .....
+* 11111111     -     255/256
+*/
 typedef struct __attribute__((__packed__))
 {
     //Global - Forms as 8-bit and padBits in LSB
     uint8_t ledBrightness :5;
     uint8_t padBits       :3;
     //RGB
-    uint8_t red           :8;
-    uint8_t green         :8;
     uint8_t blue          :8;
+    uint8_t green         :8;
+    uint8_t red           :8; 
 } DRV_APA102_LED_FRAMES;
 
 /* Payload */
-typedef struct __attribute__((__packed__)) 
+typedef struct __attribute__((__packed__))
 {
-    uint32_t startFrame;
-    DRV_APA102_LED_FRAMES* ledFrames;
-    uint32_t endFrame;
-}DRV_APA102_PAYLOAD;
+    uint32_t startFrame         :32;
+//    DRV_APA102_LED_FRAMES* ledFrames;
+    uint32_t endFrame           :32;
+} DRV_APA102_PAYLOAD;
 
 // function prototype of application callback function
 typedef void (*DRV_APA102_APP_CALLBACK)(DRV_APA102_EVENT event, uintptr_t context);

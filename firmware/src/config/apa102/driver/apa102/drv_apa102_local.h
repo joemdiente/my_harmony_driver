@@ -45,7 +45,9 @@ typedef struct
     DRV_APA102_APP_CALLBACK callback; 
     DRV_APA102_EVENT event;
     DRV_APA102_LED_FRAMES* rgbData;
-    
+    size_t sizeRgbData;
+    DRV_APA102_PAYLOAD* payload;
+    size_t sizePayload;
     
 }DRV_APA102_OBJ;
 

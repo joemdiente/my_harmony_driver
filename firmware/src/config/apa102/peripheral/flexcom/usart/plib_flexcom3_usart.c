@@ -51,10 +51,10 @@
 #include "plib_flexcom3_usart.h"
 #include "interrupts.h"
 
-#define FLEXCOM3_USART_READ_BUFFER_SIZE             128
-#define FLEXCOM3_USART_READ_BUFFER_SIZE_9BIT        (128 >> 1)
+#define FLEXCOM3_USART_READ_BUFFER_SIZE             256
+#define FLEXCOM3_USART_READ_BUFFER_SIZE_9BIT        (256 >> 1)
 
-#define FLEXCOM3_USART_HW_RX_FIFO_THRES                 16
+#define FLEXCOM3_USART_HW_RX_FIFO_THRES                 32
 #define FLEXCOM3_USART_HW_TX_FIFO_THRES                 16
 
 /* Disable Read, Overrun, Parity and Framing error interrupts */
@@ -81,8 +81,8 @@ FLEXCOM3_REGS->FLEX_US_FIER = (FLEX_US_FIER_TXFTHF_Msk); \
 
 static uint8_t FLEXCOM3_USART_ReadBuffer[FLEXCOM3_USART_READ_BUFFER_SIZE];
 
-#define FLEXCOM3_USART_WRITE_BUFFER_SIZE            128
-#define FLEXCOM3_USART_WRITE_BUFFER_SIZE_9BIT       (128 >> 1)
+#define FLEXCOM3_USART_WRITE_BUFFER_SIZE            256
+#define FLEXCOM3_USART_WRITE_BUFFER_SIZE_9BIT       (256 >> 1)
 
 static uint8_t FLEXCOM3_USART_WriteBuffer[FLEXCOM3_USART_WRITE_BUFFER_SIZE];
 
