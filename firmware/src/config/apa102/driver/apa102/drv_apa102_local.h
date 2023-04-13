@@ -39,13 +39,20 @@ typedef struct
     
     uint8_t nClients;
     uintptr_t context;
-   
+    
     const DRV_APA102_PLIB_INTERFACE* plibInterface; 
     DRV_APA102_CONFIG_PARAMS confParam;
     DRV_APA102_APP_CALLBACK callback; 
     DRV_APA102_EVENT event;
-    DRV_APA102_LED_FRAMES* rgbData;
     
+    /* Data Containers */
+    DRV_APA102_PAYLOAD_START_FRAME sFrame; 
+    DRV_APA102_PAYLOAD_END_FRAME eFrame; 
+    DRV_APA102_PAYLOAD_LED_FRAMES* rgbData;
+    
+    DRV_APA102_PAYLOAD_PTR* ptrPayload;
+    DRV_APA102_PAYLOAD_SIZE sizePayload;
+
     
 }DRV_APA102_OBJ;
 

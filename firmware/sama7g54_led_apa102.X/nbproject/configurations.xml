@@ -362,6 +362,7 @@
     </logicalFolder>
     <itemPath>.gitignore</itemPath>
     <itemPath>../../README.md</itemPath>
+    <itemPath>../../README.md</itemPath>
   </logicalFolder>
   <sourceRootList>
     <Elem>../..</Elem>
@@ -388,7 +389,7 @@
         <ScriptingSetting key="boot.entry_adr" value=""/>
         <ScriptingSetting key="boot.path"
                           value="D:\Desktop\at91bootstrap\build\binaries\at91bootstrap.elf"/>
-        <ScriptingSetting key="boot.prj" value=""/>
+        <ScriptingSetting key="boot.prj" value="at91bootstrap"/>
       </ScriptingSettings>
       <compileType>
         <linkerTool>
@@ -430,7 +431,7 @@
         <property key="generate-micro-compressed-code" value="false"/>
         <property key="isolate-each-function" value="true"/>
         <property key="make-warnings-into-errors" value="true"/>
-        <property key="optimization-level" value="-O1"/>
+        <property key="optimization-level" value=""/>
         <property key="place-data-into-section" value="true"/>
         <property key="post-instruction-scheduling" value="default"/>
         <property key="pre-instruction-scheduling" value="default"/>
@@ -492,7 +493,7 @@
         <property key="generate-16-bit-code" value="false"/>
         <property key="generate-cross-reference-file" value="false"/>
         <property key="generate-micro-compressed-code" value="false"/>
-        <property key="heap-size" value="1024"/>
+        <property key="heap-size" value="4096"/>
         <property key="input-libraries" value=""/>
         <property key="kseg-length" value=""/>
         <property key="kseg-origin" value=""/>
@@ -530,7 +531,7 @@
         <property key="generate-micro-compressed-code" value="false"/>
         <property key="isolate-each-function" value="true"/>
         <property key="make-warnings-into-errors" value="false"/>
-        <property key="optimization-level" value="-O1"/>
+        <property key="optimization-level" value=""/>
         <property key="place-data-into-section" value="false"/>
         <property key="post-instruction-scheduling" value="default"/>
         <property key="pre-instruction-scheduling" value="default"/>
