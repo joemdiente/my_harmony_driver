@@ -42,7 +42,8 @@ int main ( void )
     /* Initialize all modules */
     SYS_Initialize ( NULL );
     
-    SYS_CONSOLE_MESSAGE("\r\nEnd\r\n");
+    SYS_CONSOLE_MESSAGE("End\r\n");
+    
     while ( true )
     {
         /* Maintain state machines of all polled MPLAB Harmony modules. */

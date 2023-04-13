@@ -199,10 +199,10 @@ void SYS_Initialize ( void* data )
 
     DRV_APA102_CONFIG_PARAMS confParam;
     confParam.ledCnt = 3;
-    confParam.transferParams.clockSpeed = 10000000;
-    
+    confParam.transferParams.clkFreq = 1000000;
     confParam.drvOper = DRV_APA102_LED_STRIP;
     DRV_APA102_Initialize(0, (SYS_MODULE_INIT *) &gDrvRGBLedInitObj[0], &confParam);
+    
 
 
     APP_Initialize();

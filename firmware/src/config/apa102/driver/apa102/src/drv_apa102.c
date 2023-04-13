@@ -22,18 +22,48 @@
 #ifdef DRV_APA102_DEBUG
 
 #include "driver/apa102/drv_apa102_debug_helper.h"
+//#include "peripheral/flexcom/spi/master/plib_flexcom_spi_master_common.h"
 #endif
 
 /* Driver Instance */
 #define DRV_APA102_INSTANCES_NUMBER            1
 
 /* Part-Specific Info */
-#define DRV_APA102_MIN_CLK  8000000
-#define DRV_APA102_MAX_CLK 12000000
+#define DRV_APA102_MIN_CLK  800000
+#define DRV_APA102_MAX_CLK 1200000
 
 
 
 DRV_APA102_OBJ gDrvRGBLedObj[DRV_APA102_INSTANCES_NUMBER];
+
+
+uint8_t* DRV_APA102_Payload (DRV_APA102_LED_FRAMES* data)
+{
+    /* Build Payload [32 bits/frame]
+    * Start Frame                                  End Frame
+    *   [0*32]   -   [LED 1]   -   [LED n + 1]   -   [1*32]
+    * LED Frame
+    *   [111 - Global(5b) - Blue(8b) - Green(8b) - Red(8b)] 
+    * 
+    * ::Global is brightness setting
+    * Brightness   -   Driving Current
+    * 00000        -       0/31       
+    * 00001        -       1/31
+    * .....        -       ....
+    * 11111        -       31/31  
+    * ::Blue/Green/Red are LEDs
+    * Data         -   Duty Cycle
+    * 00000000     -     0/256
+    * 00000001     -     1/256
+    * ........     -     .....
+    * 11111111     -     255/256
+    */
+//    uint32_t startFrame, endFrame;
+//    startFrame = 0;
+//    endFrame = 1;
+
+    return (void*)NULL;
+} 
 
 SYS_MODULE_OBJ DRV_APA102_Initialize(
     const SYS_MODULE_INDEX drvIndex,
@@ -67,55 +97,92 @@ SYS_MODULE_OBJ DRV_APA102_Initialize(
         return SYS_MODULE_OBJ_INVALID;
     }    
     
-    /* Store LED Count */
-    dObj->ledMaxCnt = config->ledCnt;
+    //Get Configuration Parameters
+    {
+        dObj->confParam = *config;
+    }
+    
+    //TODO: Separate FLEXCOM to the driver
+//    dObj->confParam.transferParams.cPhase = FLEXCOM_SPI_CLOCK_PHASE_TRAILING_EDGE;
+//    dObj->confParam.transferParams.clkPol = FLEXCOM_SPI_CLOCK_POLARITY_IDLE_HIGH;
+//    dObj->confParam.transferParams.dataBits = FLEXCOM_SPI_DATA_BITS_8;
     
     /* Does the CLK within Device Specifications? */
-    if (config->transferParams.clockSpeed >= DRV_APA102_MAX_CLK ||
-            config->transferParams.clockSpeed <= DRV_APA102_MIN_CLK)
+    if (dObj->confParam.transferParams.clkFreq >= DRV_APA102_MAX_CLK ||
+            dObj->confParam.transferParams.clkFreq <= DRV_APA102_MIN_CLK)
     {
 #ifdef DRV_APA102_DEBUG
         SYS_CONSOLE_MESSAGE("ERROR: Clock speed not in specs\r\n");
-        SYS_CONSOLE_PRINT("INFO: CLK: %lu Hz\r\n",config->transferParams.clockSpeed);
+        SYS_CONSOLE_PRINT("INFO: CLK: %lu Hz\r\n",dObj->confParam.transferParams.clkFreq);
 #endif
         return SYS_MODULE_OBJ_INVALID;
     }
 
     /* Check Driver Operation */
-    if (config->drvOper == DRV_APA102_LED_STRIP)
+    if (dObj->confParam.drvOper == DRV_APA102_LED_STRIP)
     {
 #ifdef DRV_APA102_DEBUG
         SYS_CONSOLE_MESSAGE("INFO: Mode is LED Strip\r\n");
 #endif
         //Allocate memory for RGBData
         dObj->rgbData = OSAL_Malloc(
-                sizeof(DRV_APA102_RGB_DATA)*(dObj->ledMaxCnt) - 1);
+                sizeof(DRV_APA102_LED_FRAMES)*(dObj->confParam.ledCnt) - 1);
         
         //Initialize RGBData
-        for(i = 0; i < dObj->ledMaxCnt; i++)
+        for(i = 0; i < dObj->confParam.ledCnt; i++)
         {
-            dObj->rgbData[i].rgbArray.red = 0;
-            dObj->rgbData[i].rgbArray.green = 0;
-            dObj->rgbData[i].rgbArray.blue = 0;
+            dObj->rgbData[i].padBits = 0b111;
+            dObj->rgbData[i].ledBrightness = 0;
+            dObj->rgbData[i].red = 0;
+            dObj->rgbData[i].green = 0;
+            dObj->rgbData[i].blue = 0;
         }
     }
     //Add here future implementation
     else
     {
         SYS_CONSOLE_MESSAGE("ERROR: Unknown/Unimplemented Driver Operation\r\n");
+        return SYS_MODULE_OBJ_INVALID;
     }
      
     /* Get plibInterface */
     dObj->plibInterface = RGBLedInit->plibInterface;
+    dObj->confParam.transferParams.clkPhase = DRV_APA102_CLOCK_PHASE_VALID_TRAILING_EDGE;
+    dObj->confParam.transferParams.clkPol = DRV_APA102_CLOCK_POLARITY_IDLE_HIGH;
+    dObj->confParam.transferParams.dataBits = DRV_APA102_DATA_BITS_8;
     
+    /* Setup Transfer */
+    if(dObj->plibInterface->transferSetup(&dObj->confParam.transferParams, 0) != true) 
+    {
+#ifdef DRV_APA102_DEBUG
+        SYS_CONSOLE_MESSAGE("ERROR: plibInterface TransferSetup Failed.\r\n");   
+#endif
+        return SYS_MODULE_OBJ_INVALID;
+    }
     /* Initialize all LEDS */
+    DRV_APA102_DEBUG_FILL_RGBDATA(dObj);
     
-    /* Post-Initialization */
+    // Global should start at E0 (8b11100000)
+    //Build Payload
+    
+    if(dObj->plibInterface->write(
+            (uint8_t*)dObj->rgbData,  
+            20
+            ))
+    {
+#ifdef DRV_APA102_DEBUG
+        SYS_CONSOLE_MESSAGE("ERROR: plibInterface Write Failed.\r\n");
+#endif
+        return SYS_MODULE_OBJ_INVALID;
+    }
+    
+    
     //TODO: No PLIBEventHandler
 //    dObj->plibInterface->callbackRegister(DRV_APA102_PLIBEventHandler, (uintptr_t)dObj);
+    
+    /* Post-Initialization */
     dObj->isBusy = false;
     dObj->nClients = 0;
-
     dObj->isInitialized = true;
 
 #ifdef DRV_APA102_DEBUG

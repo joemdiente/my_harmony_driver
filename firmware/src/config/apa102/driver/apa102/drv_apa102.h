@@ -37,7 +37,7 @@ DRV_HANDLE DRV_APA102_Open(const SYS_MODULE_INDEX drvIndex, const DRV_IO_INTENT 
 
 void DRV_APA102_Close(const DRV_HANDLE handle);
 
-uint8_t DRV_APA102_WriteToLed(const DRV_HANDLE handle, uint8_t* ledNum, DRV_APA102_RGB_DATA* rgbVal);
+//uint8_t DRV_APA102_WriteToLed(const DRV_HANDLE handle, uint8_t* ledNum, DRV_APA102_RGB_DATA* rgbVal);
 
 //bool DRV_APA102_WriteArray(const DRV_HANDLE handle, DRV_APA102_RGB_ARRAY* rgbArr);
 

@@ -35,14 +35,18 @@ typedef struct
     bool isInitialized;
     bool isBusy;    
     bool wrInProgress;
-    uint8_t nClients;
-    uint16_t ledMaxCnt;
-    const DRV_APA102_PLIB_INTERFACE* plibInterface;    
-    DRV_APA102_APP_CALLBACK callback; 
-    uintptr_t context;
-    DRV_APA102_EVENT event;
     bool isSetupChanged;
-    DRV_APA102_RGB_DATA* rgbData;
+    
+    uint8_t nClients;
+    uintptr_t context;
+   
+    const DRV_APA102_PLIB_INTERFACE* plibInterface; 
+    DRV_APA102_CONFIG_PARAMS confParam;
+    DRV_APA102_APP_CALLBACK callback; 
+    DRV_APA102_EVENT event;
+    DRV_APA102_LED_FRAMES* rgbData;
+    
+    
 }DRV_APA102_OBJ;
 
 #endif /* _DRV_APA102_LOCAL_H */

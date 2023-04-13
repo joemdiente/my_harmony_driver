@@ -5,5 +5,5 @@
 #include "driver/apa102/drv_apa102_local.h"
 
 void DRV_APA102_DEBUG_RGBDATA_PRINTER(DRV_APA102_OBJ* obj);
-
+void DRV_APA102_DEBUG_FILL_RGBDATA(DRV_APA102_OBJ* obj);
 #endif

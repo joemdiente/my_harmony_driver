@@ -59,6 +59,10 @@
 void PIO_Initialize ( void )
 {
 
+ /* Port B Peripheral function B configuration */
+   PIOB_REGS->PIO_MSKR = 0x7800000U;
+   PIOB_REGS->PIO_CFGR = 0x2U;
+
 
 
 
