@@ -8,9 +8,9 @@ void DRV_APA102_DEBUG_FILL_RGBDATA(DRV_APA102_OBJ* obj)
     /* RGBDATA Filler */
     for(i = 0; i < obj->confParam.ledCnt; i++)
     {
-        obj->rgbData[i].red = i+1;
-        obj->rgbData[i].green = i+2;
-        obj->rgbData[i].blue = i+3;
+        obj->rgbData[i].red = 'r';
+        obj->rgbData[i].green = 'g';
+        obj->rgbData[i].blue = 'b';
     }
 }
 void DRV_APA102_DEBUG_RGBDATA_PRINTER(DRV_APA102_OBJ* obj)
