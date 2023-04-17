@@ -118,7 +118,6 @@ void FLEXCOM4_Handler( void )            __attribute__((weak, alias("DefaultInte
 void FLEXCOM5_Handler( void )            __attribute__((weak, alias("DefaultInterruptHandler")));
 void FLEXCOM6_Handler( void )            __attribute__((weak, alias("DefaultInterruptHandler")));
 void FLEXCOM8_Handler( void )            __attribute__((weak, alias("DefaultInterruptHandler")));
-void FLEXCOM9_Handler( void )            __attribute__((weak, alias("DefaultInterruptHandler")));
 void FLEXCOM10_Handler( void )           __attribute__((weak, alias("DefaultInterruptHandler")));
 void FLEXCOM11_Handler( void )           __attribute__((weak, alias("DefaultInterruptHandler")));
 void GMAC0_Handler( void )               __attribute__((weak, alias("DefaultInterruptHandler")));
@@ -288,7 +287,7 @@ PPI_SPI_HANDLER gicPIVectorTable[171U] =
     FLEXCOM6_Handler,
     FLEXCOM7_InterruptHandler,
     FLEXCOM8_Handler,
-    FLEXCOM9_Handler,
+    FLEXCOM9_InterruptHandler,
     FLEXCOM10_Handler,
     FLEXCOM11_Handler,
     NULL,

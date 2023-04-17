@@ -48,17 +48,19 @@
 #include <stdint.h>
 #include <stddef.h>
 #include <stdbool.h>
-#include "peripheral/flexcom/spi/master/plib_flexcom7_spi_master.h"
 #include "system/command/sys_command.h"
+#include "peripheral/flexcom/spi/master/plib_flexcom7_spi_master.h"
 #include "peripheral/dwdt/plib_dwdt.h"
 #include "peripheral/clk/plib_clk.h"
 #include "peripheral/gic/plib_gic.h"
 #include "peripheral/mmu/plib_mmu.h"
 #include "peripheral/matrix/plib_matrix.h"
 #include "peripheral/pio/plib_pio.h"
+#include "peripheral/flexcom/spi/master/plib_flexcom9_spi_master.h"
 #include "peripheral/flexcom/usart/plib_flexcom3_usart.h"
 #include "system/console/sys_console.h"
 #include "system/console/src/sys_console_uart_definitions.h"
+#include "driver/spi_flash/at25df/drv_at25df.h"
 #include "system/int/sys_int.h"
 #include "system/ports/sys_ports.h"
 #include "system/cache/sys_cache.h"
@@ -192,6 +194,9 @@ Remarks:
 typedef struct
 {
     SYS_MODULE_OBJ  sysConsole0;
+
+    /* AT25DF Driver Object */
+    SYS_MODULE_OBJ drvAT25DF;
 
     SYS_MODULE_OBJ  sysDebug;
 

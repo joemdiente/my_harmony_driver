@@ -31,7 +31,7 @@
 #include "system/system_module.h"
 
 //Public API interface, function declarations
-SYS_MODULE_OBJ DRV_APA102_Initialize( const SYS_MODULE_INDEX drvIndex, const SYS_MODULE_INIT* const init, DRV_APA102_CONFIG_PARAMS*);
+SYS_MODULE_OBJ DRV_APA102_Initialize( const SYS_MODULE_INDEX drvIndex, const SYS_MODULE_INIT* const init);
 
 DRV_HANDLE DRV_APA102_Open(const SYS_MODULE_INDEX drvIndex, const DRV_IO_INTENT ioIntent);
 
@@ -40,8 +40,8 @@ void DRV_APA102_Close(const DRV_HANDLE handle);
 //uint8_t DRV_APA102_WriteToLed(const DRV_HANDLE handle, uint8_t* ledNum, DRV_APA102_RGB_DATA* rgbVal);
 
 //bool DRV_APA102_WriteArray(const DRV_HANDLE handle, DRV_APA102_RGB_ARRAY* rgbArr);
-
-bool DRV_APA102_TransferSetup(const DRV_HANDLE handle, DRV_APA102_CONFIG_PARAMS* configParams);
+void DRV_APA102_EventHandlerSetup(const DRV_HANDLE handle, const DRV_APA102_APP_CALLBACK callback, const uintptr_t context);
+bool DRV_APA102_ConfigSetup(const DRV_HANDLE handle, DRV_APA102_CONFIG_PARAMS* config);
 
 #endif /* _DRV_APA102_H */
 

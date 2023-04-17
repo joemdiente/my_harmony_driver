@@ -41,14 +41,13 @@ typedef struct
     uintptr_t context;
     
     const DRV_APA102_PLIB_INTERFACE* plibInterface; 
-    DRV_APA102_CONFIG_PARAMS confParam;
+    DRV_APA102_CONFIG_PARAMS drvConf;
     DRV_APA102_APP_CALLBACK callback; 
     DRV_APA102_EVENT event;
     
     /* Data Containers */
     DRV_APA102_PAYLOAD_START_FRAME sFrame; 
     DRV_APA102_PAYLOAD_END_FRAME eFrame; 
-    DRV_APA102_PAYLOAD_LED_FRAMES* rgbData;
     
     DRV_APA102_PAYLOAD_PTR* ptrPayload;
     DRV_APA102_PAYLOAD_SIZE sizePayload;

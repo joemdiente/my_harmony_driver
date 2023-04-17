@@ -13,6 +13,13 @@
               <itemPath>../src/config/apa102/driver/apa102/drv_apa102_local.h</itemPath>
               <itemPath>../src/config/apa102/driver/apa102/drv_apa102_debug_helper.h</itemPath>
             </logicalFolder>
+            <logicalFolder name="spi_flash" displayName="spi_flash" projectFiles="true">
+              <logicalFolder name="at25df" displayName="at25df" projectFiles="true">
+                <itemPath>../src/config/apa102/driver/spi_flash/at25df/drv_at25df_definitions.h</itemPath>
+                <itemPath>../src/config/apa102/driver/spi_flash/at25df/src/drv_at25df_local.h</itemPath>
+                <itemPath>../src/config/apa102/driver/spi_flash/at25df/drv_at25df.h</itemPath>
+              </logicalFolder>
+            </logicalFolder>
             <itemPath>../src/config/apa102/driver/driver.h</itemPath>
             <itemPath>../src/config/apa102/driver/driver_common.h</itemPath>
           </logicalFolder>
@@ -33,6 +40,7 @@
                 <logicalFolder name="master" displayName="master" projectFiles="true">
                   <itemPath>../src/config/apa102/peripheral/flexcom/spi/master/plib_flexcom_spi_master_common.h</itemPath>
                   <itemPath>../src/config/apa102/peripheral/flexcom/spi/master/plib_flexcom7_spi_master.h</itemPath>
+                  <itemPath>../src/config/apa102/peripheral/flexcom/spi/master/plib_flexcom9_spi_master.h</itemPath>
                 </logicalFolder>
               </logicalFolder>
               <logicalFolder name="usart" displayName="usart" projectFiles="true">
@@ -288,6 +296,11 @@
               <itemPath>../src/config/apa102/driver/apa102/src/drv_apa102.c</itemPath>
               <itemPath>../src/config/apa102/driver/apa102/src/drv_apa102_debug.c</itemPath>
             </logicalFolder>
+            <logicalFolder name="spi_flash" displayName="spi_flash" projectFiles="true">
+              <logicalFolder name="at25df" displayName="at25df" projectFiles="true">
+                <itemPath>../src/config/apa102/driver/spi_flash/at25df/src/drv_at25df.c</itemPath>
+              </logicalFolder>
+            </logicalFolder>
           </logicalFolder>
           <logicalFolder name="peripheral" displayName="peripheral" projectFiles="true">
             <logicalFolder name="clk" displayName="clk" projectFiles="true">
@@ -300,6 +313,7 @@
               <logicalFolder name="spi" displayName="spi" projectFiles="true">
                 <logicalFolder name="master" displayName="master" projectFiles="true">
                   <itemPath>../src/config/apa102/peripheral/flexcom/spi/master/plib_flexcom7_spi_master.c</itemPath>
+                  <itemPath>../src/config/apa102/peripheral/flexcom/spi/master/plib_flexcom9_spi_master.c</itemPath>
                 </logicalFolder>
               </logicalFolder>
               <logicalFolder name="usart" displayName="usart" projectFiles="true">
@@ -361,7 +375,6 @@
       <itemPath>sama7g54_led_apa102.mc3</itemPath>
     </logicalFolder>
     <itemPath>.gitignore</itemPath>
-    <itemPath>../../README.md</itemPath>
     <itemPath>../../README.md</itemPath>
   </logicalFolder>
   <sourceRootList>
@@ -430,8 +443,8 @@
         <property key="generate-16-bit-code" value="false"/>
         <property key="generate-micro-compressed-code" value="false"/>
         <property key="isolate-each-function" value="true"/>
-        <property key="make-warnings-into-errors" value="true"/>
-        <property key="optimization-level" value=""/>
+        <property key="make-warnings-into-errors" value="false"/>
+        <property key="optimization-level" value="-O1"/>
         <property key="place-data-into-section" value="true"/>
         <property key="post-instruction-scheduling" value="default"/>
         <property key="pre-instruction-scheduling" value="default"/>

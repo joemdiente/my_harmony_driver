@@ -35,12 +35,52 @@
 // *****************************************************************************
 // *****************************************************************************
 
+//Driver Handle
 DRV_HANDLE rgbHandle;
+//Transfer Setup
+DRV_APA102_CONFIG_PARAMS confParam;
+DRV_APA102_PAYLOAD_LED_FRAMES* rgbData;
+//Instances
+#define DRV_APA102_INSTANCE_0          0
+
+volatile bool isWriteToLEDDone = false;
+volatile bool WriteLEDError = true;
+uint16_t rawTemperatureData = 0;
+uint8_t temperature = 0;
+uint8_t wrBuffer[2];
+uint8_t rdBuffer[2];
+
+void drvAPA102EventHandler(DRV_APA102_EVENT event, uintptr_t context)
+{
+    switch(event)
+    {
+        case DRV_APA102_EVENT_NONE:
+            break;
+        case DRV_APA102_EVENT_WRITE_DONE:
+            isWriteToLEDDone = true;
+            break;
+        case DRV_APA102_EVENT_WRITE_ERROR:
+            WriteLEDError = true;
+            break;
+    }
+}
 
 int main ( void )
-{
+{    
     /* Initialize all modules */
     SYS_Initialize ( NULL );
+    
+    rgbHandle = DRV_APA102_Open(DRV_APA102_INSTANCE_0, 0);
+    DRV_APA102_EventHandlerSetup(rgbHandle, drvAPA102EventHandler, 0);
+    
+    confParam.ledCnt = 3;
+    confParam.transferParams.clkFreq = 1000000;
+    confParam.drvOper = DRV_APA102_LED_STRIP;
+    
+    if(DRV_APA102_ConfigSetup(rgbHandle,&confParam) != 0)
+    {
+        SYS_CONSOLE_MESSAGE("TransferSetupFailed\r\n");
+    };
     
     SYS_CONSOLE_MESSAGE("End of Test\r\n");
     

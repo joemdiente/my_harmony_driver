@@ -85,8 +85,9 @@ typedef enum
 
 typedef enum
 {
-    DRV_APA102_EVENT_WRITE_DONE = 0,
-    DRV_APA102_EVENT_ERROR,
+    DRV_APA102_EVENT_NONE = 0,
+    DRV_APA102_EVENT_WRITE_DONE,
+    DRV_APA102_EVENT_WRITE_ERROR,
 } DRV_APA102_EVENT;
 
 typedef enum
@@ -165,16 +166,18 @@ typedef void (* DRV_APA102_PLIB_CALLBACK)( uintptr_t context);
 
 // function prototypes of PLIB APIs
 typedef bool (* DRV_APA102_PLIB_WRITE)( uint8_t*, uint16_t);
-typedef DRV_APA102_ERROR (* DRV_APA102_PLIB_ERROR_GET)( void );
 typedef bool (* DRV_APA102_PLIB_TRANSFER_SETUP)(DRV_APA102_TRANSFER_SETUP* setup, uint32_t srcClkFreq);
 typedef void (* DRV_APA102_PLIB_CALLBACK_REGISTER)(DRV_APA102_PLIB_CALLBACK, uintptr_t);
+typedef bool (* DRV_APA102_PLIB_ISTRANSMITTERBUSY)(void);
+typedef bool (* DRV_APA102_PLIB_ISBUSY)(void);
 
 typedef struct
 {
     DRV_APA102_PLIB_WRITE                          write;
-    DRV_APA102_PLIB_ERROR_GET                      errorGet;
     DRV_APA102_PLIB_TRANSFER_SETUP                 transferSetup;
-    DRV_APA102_PLIB_CALLBACK_REGISTER              callbackRegister;
+    DRV_APA102_PLIB_CALLBACK_REGISTER              callbackRegister;  
+    DRV_APA102_PLIB_ISTRANSMITTERBUSY              IsTransmitterBusy;
+    DRV_APA102_PLIB_ISBUSY                         IsBusy;
 } DRV_APA102_PLIB_INTERFACE;
 
 typedef struct

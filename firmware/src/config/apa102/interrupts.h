@@ -59,6 +59,7 @@
 
 void FLEXCOM3_InterruptHandler (void);
 void FLEXCOM7_InterruptHandler (void);
+void FLEXCOM9_InterruptHandler (void);
 
 
 

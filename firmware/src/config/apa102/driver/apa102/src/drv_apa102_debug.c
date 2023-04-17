@@ -1,33 +1,33 @@
 #include "driver/apa102/drv_apa102_debug_helper.h"
 
-void DRV_APA102_DEBUG_FILL_RGBDATA(DRV_APA102_OBJ* obj)
+void DRV_APA102_DEBUG_FILL_RGBDATA(DRV_APA102_PAYLOAD_LED_FRAMES* led_frames, DRV_APA102_CONFIG_PARAMS confParam)
 {
     uint8_t i = 0;
     
     SYS_CONSOLE_PRINT("DEBUG: Entered %s\r\n", __func__);
     /* RGBDATA Filler */
-    for(i = 0; i < obj->confParam.ledCnt; i++)
+    for(i = 0; i < confParam.ledCnt; i++)
     {
-        obj->rgbData[i].padBits = 0b111;
-        obj->rgbData[i].ledBrightness = 0b00000;
-        obj->rgbData[i].red = 'r';
-        obj->rgbData[i].green = 'g';
-        obj->rgbData[i].blue = 'b';
+        led_frames[i].padBits = 0b111;
+        led_frames[i].ledBrightness = 0b00000;
+        led_frames[i].red = 'r';
+        led_frames[i].green = 'g';
+        led_frames[i].blue = 'b';
     }
 }
-void DRV_APA102_DEBUG_RGBDATA_PRINTER(DRV_APA102_OBJ* obj)
+void DRV_APA102_DEBUG_RGBDATA_PRINTER(DRV_APA102_PAYLOAD_LED_FRAMES* led_frames, DRV_APA102_CONFIG_PARAMS confParam)
 {
     uint8_t i = 0;
 
     SYS_CONSOLE_PRINT("DEBUG: Entered %s\r\n", __func__);
     /* RGB Data Printer */
-    for(i = 0; i < obj->confParam.ledCnt; i++)
+    for(i = 0; i < confParam.ledCnt; i++)
     {
         SYS_CONSOLE_PRINT("Index: %u, r:%u,g:%u,b:%u\r\n",      
             i,
-            obj->rgbData[i].red,
-            obj->rgbData[i].green,
-            obj->rgbData[i].blue
+            led_frames[i].red,
+            led_frames[i].green,
+            led_frames[i].blue
         );
     }
 }
