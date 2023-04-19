@@ -3004,11 +3004,22 @@
 </value>
       </entry>
       <entry>
+         <key class="com.microchip.mcc.core.tokenManager.CustomKey" moduleName="core" name="DATA_CACHE_ENABLE"/>
+         <value>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;&lt;core&gt;
+  &lt;core dnOrder=&quot;0&quot; id=&quot;DATA_CACHE_ENABLE&quot;&gt;
+    &lt;Values dnOrder=&quot;0&quot;&gt;
+      &lt;User dnOrder=&quot;0&quot; value=&quot;true&quot;/&gt;
+    &lt;/Values&gt;
+  &lt;/core&gt;
+&lt;/core&gt;
+</value>
+      </entry>
+      <entry>
          <key class="com.microchip.mcc.core.tokenManager.CustomKey" moduleName="core" name="DDRAM_CACHE_SIZE"/>
          <value>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;&lt;core&gt;
   &lt;core dnOrder=&quot;0&quot; id=&quot;DDRAM_CACHE_SIZE&quot;&gt;
     &lt;Values dnOrder=&quot;0&quot;&gt;
-      &lt;Dynamic dnOrder=&quot;0&quot; id=&quot;core&quot; value=&quot;0x7C000000&quot;/&gt;
+      &lt;Dynamic dnOrder=&quot;0&quot; id=&quot;core&quot; value=&quot;0x7F000000&quot;/&gt;
     &lt;/Values&gt;
   &lt;/core&gt;
 &lt;/core&gt;
@@ -3019,7 +3030,7 @@
          <value>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;&lt;core&gt;
   &lt;core dnOrder=&quot;0&quot; id=&quot;DDRAM_CACHE_START_ADDR&quot;&gt;
     &lt;Values dnOrder=&quot;0&quot;&gt;
-      &lt;Dynamic dnOrder=&quot;0&quot; id=&quot;core&quot; value=&quot;0x64000000&quot;/&gt;
+      &lt;Dynamic dnOrder=&quot;0&quot; id=&quot;core&quot; value=&quot;0x61000000&quot;/&gt;
     &lt;/Values&gt;
   &lt;/core&gt;
 &lt;/core&gt;
@@ -3030,7 +3041,7 @@
          <value>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;&lt;core&gt;
   &lt;core dnOrder=&quot;0&quot; id=&quot;DDRAM_NO_CACHE_END_ADDR&quot;&gt;
     &lt;Values dnOrder=&quot;0&quot;&gt;
-      &lt;Dynamic dnOrder=&quot;0&quot; id=&quot;core&quot; value=&quot;0x63FFFFFF&quot;/&gt;
+      &lt;Dynamic dnOrder=&quot;0&quot; id=&quot;core&quot; value=&quot;0x60FFFFFF&quot;/&gt;
     &lt;/Values&gt;
   &lt;/core&gt;
 &lt;/core&gt;
@@ -3041,7 +3052,7 @@
          <value>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;&lt;core&gt;
   &lt;core dnOrder=&quot;0&quot; id=&quot;DDRAM_NO_CACHE_SIZE&quot;&gt;
     &lt;Values dnOrder=&quot;0&quot;&gt;
-      &lt;Dynamic dnOrder=&quot;0&quot; id=&quot;core&quot; value=&quot;0x04000000&quot;/&gt;
+      &lt;Dynamic dnOrder=&quot;0&quot; id=&quot;core&quot; value=&quot;0x01000000&quot;/&gt;
     &lt;/Values&gt;
   &lt;/core&gt;
 &lt;/core&gt;
@@ -3074,7 +3085,7 @@
          <value>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;&lt;core&gt;
   &lt;core dnOrder=&quot;0&quot; id=&quot;DRAM_COHERENT_REGION_SIZE&quot;&gt;
     &lt;Values dnOrder=&quot;0&quot;&gt;
-      &lt;User dnOrder=&quot;0&quot; value=&quot;64&quot;/&gt;
+      &lt;User dnOrder=&quot;0&quot; value=&quot;16&quot;/&gt;
     &lt;/Values&gt;
   &lt;/core&gt;
 &lt;/core&gt;
@@ -3180,6 +3191,17 @@
 </value>
       </entry>
       <entry>
+         <key class="com.microchip.mcc.core.tokenManager.CustomKey" moduleName="core" name="INSTRUCTION_CACHE_ENABLE"/>
+         <value>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;&lt;core&gt;
+  &lt;core dnOrder=&quot;0&quot; id=&quot;INSTRUCTION_CACHE_ENABLE&quot;&gt;
+    &lt;Values dnOrder=&quot;0&quot;&gt;
+      &lt;User dnOrder=&quot;0&quot; value=&quot;true&quot;/&gt;
+    &lt;/Values&gt;
+  &lt;/core&gt;
+&lt;/core&gt;
+</value>
+      </entry>
+      <entry>
          <key class="com.microchip.mcc.core.tokenManager.CustomKey" moduleName="core" name="MAIN_C"/>
          <value>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;&lt;core&gt;
   &lt;core dnOrder=&quot;0&quot; id=&quot;MAIN_C&quot;&gt;
@@ -3188,6 +3210,15 @@
         &lt;Value dnOrder=&quot;0&quot;&gt;main.c&lt;/Value&gt;
       &lt;/String&gt;
     &lt;/Attributes&gt;
+  &lt;/core&gt;
+&lt;/core&gt;
+</value>
+      </entry>
+      <entry>
+         <key class="com.microchip.mcc.core.tokenManager.CustomKey" moduleName="core" name="MMU_SEG1_TYPE"/>
+         <value>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;&lt;core&gt;
+  &lt;core dnOrder=&quot;0&quot; id=&quot;MMU_SEG1_TYPE&quot;&gt;
+    &lt;Values dnOrder=&quot;0&quot;/&gt;
   &lt;/core&gt;
 &lt;/core&gt;
 </value>
@@ -3363,6 +3394,17 @@
   &lt;core dnOrder=&quot;0&quot; id=&quot;PORT_B_MSKR_ValueGPIO&quot;&gt;
     &lt;Values dnOrder=&quot;0&quot;&gt;
       &lt;Dynamic dnOrder=&quot;0&quot; id=&quot;core&quot; value=&quot;0x0&quot;/&gt;
+    &lt;/Values&gt;
+  &lt;/core&gt;
+&lt;/core&gt;
+</value>
+      </entry>
+      <entry>
+         <key class="com.microchip.mcc.core.tokenManager.CustomKey" moduleName="core" name="SRAM_IS_NON_CACHEABLE"/>
+         <value>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;&lt;core&gt;
+  &lt;core dnOrder=&quot;0&quot; id=&quot;SRAM_IS_NON_CACHEABLE&quot;&gt;
+    &lt;Values dnOrder=&quot;0&quot;&gt;
+      &lt;User dnOrder=&quot;0&quot; value=&quot;false&quot;/&gt;
     &lt;/Values&gt;
   &lt;/core&gt;
 &lt;/core&gt;
@@ -8178,7 +8220,7 @@
       </entry>
       <entry>
          <file>..\src\config\apa102\ddr.ld</file>
-         <hash>0322d11fe023ca0499ec4bb069e967c8e4737623ddc97d66b06a77792435d51c</hash>
+         <hash>c6454caab96febd03c6d9b487b502898fc4b492529c39a8441137c7b5feb4118</hash>
       </entry>
       <entry>
          <file>..\src\packs\SAMA7G54_DFP\instance\tzpm.h</file>
@@ -8442,7 +8484,7 @@
       </entry>
       <entry>
          <file>..\src\config\apa102\definitions.h</file>
-         <hash>ba53c946fc87bae53fc39e9ecb05fa81bc85d78e72bb089fd467ffeb8f0ed3cc</hash>
+         <hash>799e3a9753983b229cab567f2f3d78761ee073791b935b83cdaa37838a0d684f</hash>
       </entry>
       <entry>
          <file>..\src\packs\SAMA7G54_DFP\instance\secumod.h</file>
@@ -8914,7 +8956,7 @@
       </entry>
       <entry>
          <file>..\src\config\apa102\peripheral\mmu\plib_mmu.c</file>
-         <hash>666bfb143cb803b4de93e9a7cfcfad3d155b68a084dce2a75e22d217c3f3591d</hash>
+         <hash>9d208c9366b7724115e10b8941a6a6f97b457de806dfff78757e5f1657392337</hash>
       </entry>
       <entry>
          <file>..\src\config\apa102\peripheral\mmu\plib_mmu.h</file>

@@ -34,8 +34,8 @@ SEARCH_DIR(.)
 MEMORY
 {
 	sram        (!RWX) : ORIGIN = 0x00100000,   LENGTH = 128K /* sram */
-	ram         (RWX) : ORIGIN = 0x64000000, LENGTH = 0x7C000000  /* ram */
-	ram_nocache  (!RWX) : ORIGIN = 0x60000000, LENGTH = 0x04000000  /* ram (non-cached) */
+	ram         (RWX) : ORIGIN = 0x61000000, LENGTH = 0x7F000000  /* ram */
+	ram_nocache  (!RWX) : ORIGIN = 0x60000000, LENGTH = 0x01000000  /* ram (non-cached) */
 	rom         (LRX) : ORIGIN = 0, LENGTH = 0
 }
 

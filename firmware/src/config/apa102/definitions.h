@@ -48,8 +48,8 @@
 #include <stdint.h>
 #include <stddef.h>
 #include <stdbool.h>
-#include "system/command/sys_command.h"
 #include "peripheral/flexcom/spi/master/plib_flexcom7_spi_master.h"
+#include "system/command/sys_command.h"
 #include "peripheral/dwdt/plib_dwdt.h"
 #include "peripheral/clk/plib_clk.h"
 #include "peripheral/gic/plib_gic.h"

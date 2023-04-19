@@ -45,10 +45,7 @@ typedef struct
     DRV_APA102_APP_CALLBACK callback; 
     DRV_APA102_EVENT event;
     
-    /* Data Containers */
-    DRV_APA102_PAYLOAD_START_FRAME sFrame; 
-    DRV_APA102_PAYLOAD_END_FRAME eFrame; 
-    
+    /* Data Containers */    
     DRV_APA102_PAYLOAD_PTR* ptrPayload;
     DRV_APA102_PAYLOAD_SIZE sizePayload;
 

@@ -52,6 +52,7 @@ uint8_t rdBuffer[2];
 
 void drvAPA102EventHandler(DRV_APA102_EVENT event, uintptr_t context)
 {
+    SYS_CONSOLE_MESSAGE("EventHandler Called!\r\n");
     switch(event)
     {
         case DRV_APA102_EVENT_NONE:
@@ -71,17 +72,25 @@ int main ( void )
     SYS_Initialize ( NULL );
     
     rgbHandle = DRV_APA102_Open(DRV_APA102_INSTANCE_0, 0);
-    DRV_APA102_EventHandlerSetup(rgbHandle, drvAPA102EventHandler, 0);
+    DRV_APA102_EventHandlerSet(rgbHandle, drvAPA102EventHandler, 0);
     
-    confParam.ledCnt = 3;
+    confParam.ledCnt = 3;   
     confParam.transferParams.clkFreq = 1000000;
     confParam.drvOper = DRV_APA102_LED_STRIP;
-    
-    if(DRV_APA102_ConfigSetup(rgbHandle,&confParam) != 0)
+    if(DRV_APA102_ConfigSet(rgbHandle,&confParam) != 0)
     {
-        SYS_CONSOLE_MESSAGE("TransferSetupFailed\r\n");
+        SYS_CONSOLE_MESSAGE("Driver Configuration Setup Failed\r\n");
+        DRV_APA102_Close(rgbHandle);
     };
     
+    rgbData = DRV_APA102_AllocateBuffer(rgbHandle);
+
+    rgbData[0].ledBrightness = 20;
+    rgbData[0].red = 200;
+    rgbData[0].blue = 123;
+    rgbData[0].padBits = 0b111;
+    
+    DRV_APA102_UpdateStrip (rgbHandle);
     SYS_CONSOLE_MESSAGE("End of Test\r\n");
     
     while ( true )
