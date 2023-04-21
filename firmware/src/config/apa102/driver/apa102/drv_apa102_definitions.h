@@ -176,7 +176,6 @@ typedef struct
     DRV_APA102_PLIB_WRITE                          write;
     DRV_APA102_PLIB_TRANSFER_SETUP                 transferSetup;
     DRV_APA102_PLIB_CALLBACK_REGISTER              callbackRegister;  
-    DRV_APA102_PLIB_ISTRANSMITTERBUSY              IsTransmitterBusy;
     DRV_APA102_PLIB_ISBUSY                         IsBusy;
 } DRV_APA102_PLIB_INTERFACE;
 
