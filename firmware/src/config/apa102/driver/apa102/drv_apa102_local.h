@@ -36,7 +36,7 @@ typedef struct
     bool isBusy;    
     bool wrInProgress;
     bool isSetupChanged;
-    
+    bool isBufferAllocated;
     uint8_t nClients;
     uintptr_t context;
     

@@ -24,7 +24,8 @@
 
 #include <stddef.h>                     // Defines NULL
 #include <stdbool.h>                    // Defines true
-#include <stdlib.h>                     // Defines EXIT_FAILURE
+#include <stdlib.h>
+#include <string.h>                     // Defines EXIT_FAILURE
 #include "definitions.h"
 #include "driver/apa102/drv_apa102.h"
 
@@ -104,19 +105,24 @@ int main ( void )
     rgbData[0].ledBrightness = 0;
     rgbData[1].ledBrightness = 0;
     rgbData[2].ledBrightness = 0;
-    rgbData[3].ledBrightness = 0;
     DRV_APA102_UpdateLEDs (rgbHandle);
 
     while ( true )
     {
-        printf ("\33[H\33[2J");
+//        printf ("\33[H\33[2J");
         printf("%s", main_menu);
         scanf("%c", &cmd);
         
         switch(cmd)
         {
             case CMD_LED_DEMO_FADE:
-                printf ("\33[H\33[2J");
+//                printf ("\33[H\33[2J");
+                memset(&rgbData[0], 0, sizeof(&rgbData));
+                memset(&rgbData[1], 0, sizeof(&rgbData));
+                memset(&rgbData[2], 0, sizeof(&rgbData));
+                rgbData[0].ledBrightness = 30;
+                rgbData[0].red = 255;
+                
                 printf("Fading LED Demo\r\n");
                 printf("Press Any Key to Exit\r\n");
                 DRV_APA102_UpdateLEDs (rgbHandle);
@@ -125,16 +131,28 @@ int main ( void )
                 break;
 
             case CMD_LED_DEMO_BLINK:
-                printf ("\33[H\33[2J");
+//                printf ("\33[H\33[2J");
+                memset(&rgbData[0], 0, sizeof(&rgbData));
+                memset(&rgbData[1], 0, sizeof(&rgbData));
+                memset(&rgbData[2], 0, sizeof(&rgbData));
+                rgbData[1].ledBrightness = 30;
+                rgbData[1].blue = 255;
                 printf("Blink LEDs every 1 Sec. Demo\r\n");
                 printf("Press Any Key to Exit\r\n");
+                DRV_APA102_UpdateLEDs (rgbHandle);
                 scanf("%c", &cmd);
                 break;
 
             case CMD_LED_DEMO_RUN:
-                printf ("\33[H\33[2J");
+//                printf ("\33[H\33[2J");
+                memset(&rgbData[0], 0, sizeof(&rgbData));
+                memset(&rgbData[1], 0, sizeof(&rgbData));
+                memset(&rgbData[2], 0, sizeof(&rgbData));
+                rgbData[2].ledBrightness = 30;
+                rgbData[2].green = 255;
                 printf("Running LED Demo\r\n");
                 printf("Press Any Key to Exit\r\n");
+                DRV_APA102_UpdateLEDs (rgbHandle);
                 scanf("%c", &cmd);
                 break;
                 

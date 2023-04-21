@@ -10,7 +10,7 @@
 //------------------------------------------------------------------------------------------------  
 
 /* Debug */
-//#define DRV_APA102_DEBUG 
+#define DRV_APA102_DEBUG 
 
 #include "driver/apa102/drv_apa102.h"
 #include "driver/apa102/drv_apa102_local.h"
@@ -35,86 +35,45 @@ DRV_APA102_PAYLOAD_END_FRAME eFrame = EFRAME_VAL;
 
 DRV_APA102_OBJ gDrvAPA102Obj[DRV_APA102_INSTANCES_NUMBER];
 
-/* APA102 Internal Functions */
+// *****************************************************************************
+// *****************************************************************************
+// Section: DRV_APA102 Private Functions
+// *****************************************************************************
+// *****************************************************************************
+
+/* 
+ * APA102 Driver PLIBEventHandler
+ * ::This is called whenever one SPI transfer is finished.
+ */
 static void DRV_APA102_PLIBEventHandler(uintptr_t contextHandle)
 {
-    printf("PlibEventHandler\r\n");
-    
+    DRV_APA102_OBJ* dObj     = (DRV_APA102_OBJ*) contextHandle;
+
+#ifdef DRV_APA102_DEBUG
+    printf("INFO: %s\r\n",__func__);
+#endif
+    if(dObj->plibInterface->IsBusy() == true)
+    {
+        dObj->wrInProgress = true;
+    }
+    else
+    {
+        dObj->isBusy = false;
+        dObj->wrInProgress = false;
+    }
+
 #ifdef DRV_APA102_DEBUG
     printf("WARNING: Unimplemented %s\r\n",__func__);
 #endif
-//    DRV_APA102_OBJ* dObj = (DRV_APA102_OBJ *)contextHandle;
-//    DRV_APA102_ERROR error;
-//    
-//    error = dObj->plibInterface->errorGet();
-//    
-//    if (dObj->wrInProgress == true && error == DRV_APA102_ERROR_NONE)
-//    {    
-//        dObj->wrInProgress = false;
-//        dObj->eepChkBusyStatus = true;
-//        
-//        // Initiate checking of EEPROM's write busy status
-//        dObj->wrBuffer[0] = 0xFF;
-//        
-//        dObj->plibInterface->write(dObj->configParams.eepromAddr, (void *)dObj->wrBuffer, 1);
-//    }
-//    else if (dObj->eepChkBusyStatus == true)
-//    {
-//        if (error == DRV_APA102_ERROR_NACK)
-//        {
-//            // EEPROM is still busy with the internal write. Keep checking for the EEPROM write busy status.
-//            dObj->wrBuffer[0] = 0xFF;
-//
-//            dObj->plibInterface->write(dObj->configParams.eepromAddr, (void *)dObj->wrBuffer, 1);
-//        }
-//        else
-//        {
-//            // EEPROM internal write is completed.
-//            dObj->eepChkBusyStatus = false;
-//        }
-//    }
-//    
-//    if (dObj->wrInProgress == false && dObj->eepChkBusyStatus == false)
-//    {
-//        if(error != DRV_APA102_ERROR_NONE)
-//        {
-//            dObj->event = DRV_APA102_EVENT_ERROR;
-//        }        
-//            
-//        dObj->isBusy = false;
-//        
-//        if(dObj->callback != NULL)
-//        {
-//            dObj->callback(dObj->event, dObj->context);
-//        }
-//    }
 }
-//==========================TODO ABOVE==================//
-
-//{  
-//    /* Initialize LEDs */
-//    if(dObj->plibInterface->write((uint8_t*)dObj->ptrPayload, dObj->sizePayload) != true)
-//    {
-//#ifdef DRV_APA102_DEBUG
-//        printf("ERROR: plibInterface Write Failed.\r\n");
-//#endif
-//        return SYS_MODULE_OBJ_INVALID;
-//    }
-//    else
-//    {
-//#ifdef DRV_APA102_DEBUG
-//        printf("INFO: plibInterface Write Success.\r\n");
-//#endif
-//    }
-//    
-//    //TODO: No PLIBEventHandler
-////    dObj->plibInterface->callbackRegister(DRV_APA102_PLIBEventHandler, (uintptr_t)dObj);
-//}
-/* APA102 Public APIs */
-/*
- * APA102 Driver Configuration
+// *****************************************************************************
+// *****************************************************************************
+// Section: DRV_APA102 Public Functions
+// *****************************************************************************
+// *****************************************************************************
+/* 
+ * APA102 Driver Configuration 
  */
-
 bool DRV_APA102_UpdateLEDs (const DRV_HANDLE handle)
 {
     DRV_APA102_OBJ* dObj     = NULL;
@@ -133,7 +92,37 @@ bool DRV_APA102_UpdateLEDs (const DRV_HANDLE handle)
     
     dObj = &gDrvAPA102Obj[handle];
     
-    /* Initialize LEDs */
+    //Check if Driver is Busy
+    if(dObj->isBusy)
+    {
+#ifdef DRV_APA102_DEBUG
+        printf("ERROR: Driver is Busy. Write Failed\r\n");
+#endif
+        return false;
+    }
+    dObj->isBusy = true;
+    
+    //Check if buffer was allocated
+    if(dObj->isBufferAllocated != true)
+    {
+#ifdef DRV_APA102_DEBUG
+        printf("ERROR: Buffer not allocated\r\n");
+#endif
+    }
+    
+    //Format the allocated memory; Ensures LED Frames are always formatted before proceeding with write
+    dObj->ptrPayload[0] = SFRAME_VAL;                                       //Start Frame 0s*32
+    dObj->ptrPayload[dObj->drvConf.ledCnt] = EFRAME_VAL;                    //End Frame 1s*32 (Last Index is NULL so use it as End Frame)
+    
+    //Ensure all padding bits are 1s
+    uint32_t i;
+    DRV_APA102_PAYLOAD_LED_FRAMES* initLEDFrames = (DRV_APA102_PAYLOAD_LED_FRAMES*)&dObj->ptrPayload[1];
+    for(i = 0; i < dObj->drvConf.ledCnt; i++)
+    {
+        initLEDFrames[i].padBits = 0b111;
+    }
+    
+    /* Write to PLib */
     if(dObj->plibInterface->write((uint8_t*)dObj->ptrPayload, dObj->sizePayload) != true)
     {
 #ifdef DRV_APA102_DEBUG
@@ -149,6 +138,10 @@ bool DRV_APA102_UpdateLEDs (const DRV_HANDLE handle)
     }
     return true;
 }
+/* 
+ * APA102 Dynamic Buffer Allocation
+ * based on LED count 
+ */
 DRV_APA102_PAYLOAD_LED_FRAMES* DRV_APA102_AllocateBuffer(const DRV_HANDLE handle)
 {
     DRV_APA102_OBJ* dObj     = NULL;
@@ -173,14 +166,17 @@ DRV_APA102_PAYLOAD_LED_FRAMES* DRV_APA102_AllocateBuffer(const DRV_HANDLE handle
 
     //Initialize memory
     memset(dObj->ptrPayload,0,dObj->sizePayload);
-    
-    //Format the allocated memory and pass pointer to application
-    dObj->ptrPayload[0] = SFRAME_VAL;                                       //Start Frame 0s*32
-    dObj->ptrPayload[dObj->drvConf.ledCnt] = EFRAME_VAL;                    //End Frame 1s*32 (Last Index is NULL so use it as End Frame)
 
+    if(dObj->ptrPayload != NULL)
+    {
+        dObj->isBufferAllocated = true;
+    }
+    
     return (DRV_APA102_PAYLOAD_LED_FRAMES*)&dObj->ptrPayload[1];
 }
-
+/* 
+ * APA102 Driver Configuration Setup 
+ */
 bool DRV_APA102_ConfigSet(const DRV_HANDLE handle, DRV_APA102_CONFIG_PARAMS* config)
 {
     DRV_APA102_OBJ* dObj     = NULL;
@@ -215,7 +211,7 @@ bool DRV_APA102_ConfigSet(const DRV_HANDLE handle, DRV_APA102_CONFIG_PARAMS* con
         return SYS_MODULE_OBJ_INVALID;
     }
     
-    //Copy config to drvConf
+    //Copy new config to drvConf
     dObj->drvConf = *config;
     
     /* Setup SPI Transfer Parameters (Hardcoded; This is APA102's SPI Mode) */
@@ -328,12 +324,14 @@ SYS_MODULE_OBJ DRV_APA102_Initialize(
     
     /* Initialize pLibInterface */
     dObj->plibInterface = APA102Init->plibInterface;
-//    dObj->plibInterface->callbackRegister(DRV_APA102_PLIBEventHandler, (uintptr_t)dObj);
+    dObj->plibInterface->callbackRegister(DRV_APA102_PLIBEventHandler, (uintptr_t)dObj);
+    
     /* Initialize Driver Variables  */
     dObj->isBusy = false;
     dObj->nClients = 0;
     dObj->isInitialized = true;
-
+    dObj->isBufferAllocated = false;
+    
     return (SYS_MODULE_OBJ)drvIndex;
 }
 /* *****************************************************************************
