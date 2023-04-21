@@ -37,7 +37,7 @@ DRV_HANDLE DRV_APA102_Open(const SYS_MODULE_INDEX drvIndex, const DRV_IO_INTENT 
 
 void DRV_APA102_Close(const DRV_HANDLE handle);
 
-DRV_APA102_PAYLOAD_LED_FRAMES* DRV_APA102_AllocateBuffer(const DRV_HANDLE handle);
+DRV_APA102_PAYLOAD_LED_FRAME* DRV_APA102_AllocateBuffer(const DRV_HANDLE handle);
 
 void DRV_APA102_EventHandlerSet(const DRV_HANDLE handle, const DRV_APA102_APP_CALLBACK callback, const uintptr_t context);
 

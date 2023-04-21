@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include "driver/apa102/drv_apa102_debug_helper.h"
 
-void DRV_APA102_DEBUG_FILL_RGBDATA(DRV_APA102_PAYLOAD_LED_FRAMES* led_frames, DRV_APA102_CONFIG_PARAMS confParam)
+void DRV_APA102_DEBUG_FILL_RGBDATA(DRV_APA102_PAYLOAD_LED_FRAME* led_frames, DRV_APA102_CONFIG_PARAMS confParam)
 {
     uint8_t i = 0;
     
@@ -16,7 +16,7 @@ void DRV_APA102_DEBUG_FILL_RGBDATA(DRV_APA102_PAYLOAD_LED_FRAMES* led_frames, DR
         led_frames[i].blue = 'b';
     }
 }
-void DRV_APA102_DEBUG_RGBDATA_PRINTER(DRV_APA102_PAYLOAD_LED_FRAMES* led_frames, DRV_APA102_CONFIG_PARAMS confParam)
+void DRV_APA102_DEBUG_RGBDATA_PRINTER(DRV_APA102_PAYLOAD_LED_FRAME* led_frames, DRV_APA102_CONFIG_PARAMS confParam)
 {
     uint8_t i = 0;
 

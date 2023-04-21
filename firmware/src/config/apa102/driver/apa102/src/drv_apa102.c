@@ -111,7 +111,7 @@ bool _DRV_APA102_UpdateLEDs (const DRV_HANDLE handle)
     
     //Ensure all padding bits are 1s
     uint32_t i;
-    DRV_APA102_PAYLOAD_LED_FRAMES* initLEDFrames = (DRV_APA102_PAYLOAD_LED_FRAMES*)&dObj->ptrPayload[1];
+    DRV_APA102_PAYLOAD_LED_FRAME* initLEDFrames = (DRV_APA102_PAYLOAD_LED_FRAME*)&dObj->ptrPayload[1];
     for(i = 0; i < dObj->drvConf.ledCnt; i++)
     {
         initLEDFrames[i].padBits = 0b111;
@@ -138,6 +138,10 @@ bool _DRV_APA102_UpdateLEDs (const DRV_HANDLE handle)
 // Section: DRV_APA102 Public Functions
 // *****************************************************************************
 // *****************************************************************************
+bool DRV_APA102_LEDSequencer (const DRV_HANDLE handle)
+{
+    return true;
+}
 bool DRV_APA102_InitializeLED(const DRV_HANDLE handle)
 {
     DRV_APA102_OBJ* dObj     = NULL;
@@ -168,13 +172,13 @@ bool DRV_APA102_InitializeLED(const DRV_HANDLE handle)
  * APA102 Dynamic Buffer Allocation
  * based on LED count 
  */
-DRV_APA102_PAYLOAD_LED_FRAMES* DRV_APA102_AllocateBuffer(const DRV_HANDLE handle)
+DRV_APA102_PAYLOAD_LED_FRAME* DRV_APA102_AllocateBuffer(const DRV_HANDLE handle)
 {
     DRV_APA102_OBJ* dObj     = NULL;
     
     if (handle >= DRV_APA102_INSTANCES_NUMBER)
     {
-        return (DRV_APA102_PAYLOAD_LED_FRAMES*)NULL;
+        return (DRV_APA102_PAYLOAD_LED_FRAME*)NULL;
     }
     
     dObj = &gDrvAPA102Obj[handle];
@@ -182,7 +186,7 @@ DRV_APA102_PAYLOAD_LED_FRAMES* DRV_APA102_AllocateBuffer(const DRV_HANDLE handle
     /* Memory Allocation */
     //Calculate needed memory
     dObj->sizePayload = (DRV_APA102_PAYLOAD_SIZE)( 
-            (sizeof(DRV_APA102_PAYLOAD_LED_FRAMES)*(dObj->drvConf.ledCnt - 1)) 
+            (sizeof(DRV_APA102_PAYLOAD_LED_FRAME)*(dObj->drvConf.ledCnt - 1)) 
             + sizeof(DRV_APA102_PAYLOAD_START_FRAME) 
             + sizeof(DRV_APA102_PAYLOAD_END_FRAME)
             );
@@ -195,7 +199,7 @@ DRV_APA102_PAYLOAD_LED_FRAMES* DRV_APA102_AllocateBuffer(const DRV_HANDLE handle
         dObj->isBufferAllocated = true;
     }
     
-    return (DRV_APA102_PAYLOAD_LED_FRAMES*)&dObj->ptrPayload[1];
+    return (DRV_APA102_PAYLOAD_LED_FRAME*)&dObj->ptrPayload[1];
 }
 /* 
  * APA102 Driver Configuration Setup 

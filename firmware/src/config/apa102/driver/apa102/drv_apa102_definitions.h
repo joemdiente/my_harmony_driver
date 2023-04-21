@@ -146,7 +146,7 @@ typedef struct __attribute__((__packed__))
     uint8_t blue          :8;
     uint8_t green         :8;
     uint8_t red           :8;
-} DRV_APA102_PAYLOAD_LED_FRAMES;
+} DRV_APA102_PAYLOAD_LED_FRAME;
 typedef uint32_t DRV_APA102_PAYLOAD_START_FRAME;
 typedef uint32_t DRV_APA102_PAYLOAD_END_FRAME;
 typedef enum
@@ -157,6 +157,9 @@ typedef enum
 
 typedef uint16_t DRV_APA102_PAYLOAD_SIZE;
 typedef uint32_t DRV_APA102_PAYLOAD_PTR; 
+
+//Multiple Payload Pointer
+typedef DRV_APA102_PAYLOAD_PTR* DRV_APA102_PAYLOAD_LED_INSTRUCTION;
 
 // function prototype of application callback function
 typedef void (*DRV_APA102_APP_CALLBACK)(DRV_APA102_EVENT event, uintptr_t context);

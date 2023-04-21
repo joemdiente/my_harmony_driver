@@ -40,7 +40,7 @@
 DRV_HANDLE rgbHandle;
 //Transfer Setup
 DRV_APA102_CONFIG_PARAMS confParam;
-DRV_APA102_PAYLOAD_LED_FRAMES* rgbData;
+DRV_APA102_PAYLOAD_LED_FRAME* rgbData;
 //Instances
 #define DRV_APA102_INSTANCE_0          0
 
@@ -98,7 +98,10 @@ void drvAPA102EventHandler(DRV_APA102_EVENT event, uintptr_t context)
             break;
     }
 }
-
+void demoLEDFade(void)
+{
+    
+}
 int main ( void )
 {    
     /* Initialize all modules */
@@ -130,8 +133,8 @@ int main ( void )
             case CMD_LED_DEMO_FADE:
                 printf ("\33[H\33[2J");
                 printf("Fading LED Demo\r\n");
+                demoLEDFade();
                 printf("Press Any Key to Exit\r\n");
-                DRV_APA102_InitializeLED(rgbHandle);
                 scanf("%c", &cmd);
                 
                 break;
