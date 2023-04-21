@@ -18,7 +18,6 @@
 #include <stdbool.h>
 #include <string.h>
 #include <stdio.h>
-#include "system/console/sys_console.h"
 
 #ifdef DRV_APA102_DEBUG
 #include "driver/apa102/drv_apa102_debug_helper.h"
@@ -39,10 +38,10 @@ DRV_APA102_OBJ gDrvAPA102Obj[DRV_APA102_INSTANCES_NUMBER];
 /* APA102 Internal Functions */
 static void DRV_APA102_PLIBEventHandler(uintptr_t contextHandle)
 {
-    SYS_CONSOLE_MESSAGE("PlibEventHandler\r\n");
+    printf("PlibEventHandler\r\n");
     
 #ifdef DRV_APA102_DEBUG
-    SYS_CONSOLE_PRINT("WARNING: Unimplemented %s\r\n",__func__);
+    printf("WARNING: Unimplemented %s\r\n",__func__);
 #endif
 //    DRV_APA102_OBJ* dObj = (DRV_APA102_OBJ *)contextHandle;
 //    DRV_APA102_ERROR error;
@@ -97,14 +96,14 @@ static void DRV_APA102_PLIBEventHandler(uintptr_t contextHandle)
 //    if(dObj->plibInterface->write((uint8_t*)dObj->ptrPayload, dObj->sizePayload) != true)
 //    {
 //#ifdef DRV_APA102_DEBUG
-//        SYS_CONSOLE_MESSAGE("ERROR: plibInterface Write Failed.\r\n");
+//        printf("ERROR: plibInterface Write Failed.\r\n");
 //#endif
 //        return SYS_MODULE_OBJ_INVALID;
 //    }
 //    else
 //    {
 //#ifdef DRV_APA102_DEBUG
-//        SYS_CONSOLE_MESSAGE("INFO: plibInterface Write Success.\r\n");
+//        printf("INFO: plibInterface Write Success.\r\n");
 //#endif
 //    }
 //    
@@ -121,13 +120,13 @@ bool DRV_APA102_UpdateLEDs (const DRV_HANDLE handle)
     DRV_APA102_OBJ* dObj     = NULL;
 
 #ifdef DRV_APA102_DEBUG
-    SYS_CONSOLE_PRINT("INFO: %s\r\n",__func__);
+    printf("INFO: %s\r\n",__func__);
 #endif
     
     if (handle >= DRV_APA102_INSTANCES_NUMBER)
     {
 #ifdef DRV_APA102_DEBUG
-        SYS_CONSOLE_MESSAGE("ERROR: index >= instance number\r\n");
+        printf("ERROR: index >= instance number\r\n");
 #endif
         return NULL;
     }
@@ -138,14 +137,14 @@ bool DRV_APA102_UpdateLEDs (const DRV_HANDLE handle)
     if(dObj->plibInterface->write((uint8_t*)dObj->ptrPayload, dObj->sizePayload) != true)
     {
 #ifdef DRV_APA102_DEBUG
-        SYS_CONSOLE_MESSAGE("ERROR: plibInterface Write Failed.\r\n");
+        printf("ERROR: plibInterface Write Failed.\r\n");
 #endif
         return SYS_MODULE_OBJ_INVALID;
     }
     else
     {
 #ifdef DRV_APA102_DEBUG
-        SYS_CONSOLE_MESSAGE("INFO: plibInterface Write Success.\r\n");
+        printf("INFO: plibInterface Write Success.\r\n");
 #endif
     }
     return true;

@@ -1,10 +1,11 @@
+#include <stdio.h>
 #include "driver/apa102/drv_apa102_debug_helper.h"
 
 void DRV_APA102_DEBUG_FILL_RGBDATA(DRV_APA102_PAYLOAD_LED_FRAMES* led_frames, DRV_APA102_CONFIG_PARAMS confParam)
 {
     uint8_t i = 0;
     
-    SYS_CONSOLE_PRINT("DEBUG: Entered %s\r\n", __func__);
+    printf("DEBUG: Entered %s\r\n", __func__);
     /* RGBDATA Filler */
     for(i = 0; i < confParam.ledCnt; i++)
     {
@@ -19,11 +20,11 @@ void DRV_APA102_DEBUG_RGBDATA_PRINTER(DRV_APA102_PAYLOAD_LED_FRAMES* led_frames,
 {
     uint8_t i = 0;
 
-    SYS_CONSOLE_PRINT("DEBUG: Entered %s\r\n", __func__);
+    printf("DEBUG: Entered %s\r\n", __func__);
     /* RGB Data Printer */
     for(i = 0; i < confParam.ledCnt; i++)
     {
-        SYS_CONSOLE_PRINT("Index: %u, r:%u,g:%u,b:%u\r\n",      
+        printf("Index: %u, r:%u,g:%u,b:%u\r\n",      
             i,
             led_frames[i].red,
             led_frames[i].green,

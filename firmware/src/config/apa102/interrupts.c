@@ -114,6 +114,7 @@ void CSI2DC_Handler( void )              __attribute__((weak, alias("DefaultInte
 void FLEXCOM0_Handler( void )            __attribute__((weak, alias("DefaultInterruptHandler")));
 void FLEXCOM1_Handler( void )            __attribute__((weak, alias("DefaultInterruptHandler")));
 void FLEXCOM2_Handler( void )            __attribute__((weak, alias("DefaultInterruptHandler")));
+void FLEXCOM3_InterruptHandler( void )   __attribute__((weak, alias("DefaultInterruptHandler")));
 void FLEXCOM4_Handler( void )            __attribute__((weak, alias("DefaultInterruptHandler")));
 void FLEXCOM5_Handler( void )            __attribute__((weak, alias("DefaultInterruptHandler")));
 void FLEXCOM6_Handler( void )            __attribute__((weak, alias("DefaultInterruptHandler")));

@@ -65,18 +65,8 @@
             <logicalFolder name="cache" displayName="cache" projectFiles="true">
               <itemPath>../src/config/apa102/system/cache/sys_cache.h</itemPath>
             </logicalFolder>
-            <logicalFolder name="command" displayName="command" projectFiles="true">
-              <itemPath>../src/config/apa102/system/command/sys_command.h</itemPath>
-            </logicalFolder>
-            <logicalFolder name="console" displayName="console" projectFiles="true">
-              <itemPath>../src/config/apa102/system/console/src/sys_console_uart_definitions.h</itemPath>
-              <itemPath>../src/config/apa102/system/console/sys_console.h</itemPath>
-              <itemPath>../src/config/apa102/system/console/src/sys_console_uart.h</itemPath>
-              <itemPath>../src/config/apa102/system/console/src/sys_console_local.h</itemPath>
-            </logicalFolder>
             <logicalFolder name="debug" displayName="debug" projectFiles="true">
               <itemPath>../src/config/apa102/system/debug/sys_debug.h</itemPath>
-              <itemPath>../src/config/apa102/system/debug/src/sys_debug_local.h</itemPath>
             </logicalFolder>
             <logicalFolder name="int" displayName="int" projectFiles="true">
               <itemPath>../src/config/apa102/system/int/sys_int_mapping.h</itemPath>
@@ -339,16 +329,6 @@
           <logicalFolder name="system" displayName="system" projectFiles="true">
             <logicalFolder name="cache" displayName="cache" projectFiles="true">
               <itemPath>../src/config/apa102/system/cache/sys_cache.c</itemPath>
-            </logicalFolder>
-            <logicalFolder name="command" displayName="command" projectFiles="true">
-              <itemPath>../src/config/apa102/system/command/src/sys_command.c</itemPath>
-            </logicalFolder>
-            <logicalFolder name="console" displayName="console" projectFiles="true">
-              <itemPath>../src/config/apa102/system/console/src/sys_console.c</itemPath>
-              <itemPath>../src/config/apa102/system/console/src/sys_console_uart.c</itemPath>
-            </logicalFolder>
-            <logicalFolder name="debug" displayName="debug" projectFiles="true">
-              <itemPath>../src/config/apa102/system/debug/src/sys_debug.c</itemPath>
             </logicalFolder>
             <logicalFolder name="int" displayName="int" projectFiles="true">
               <itemPath>../src/config/apa102/system/int/src/sys_int.c</itemPath>
