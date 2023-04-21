@@ -70,7 +70,6 @@ const DRV_APA102_PLIB_INTERFACE gDrvAPA102PLIBIntf[1] =
         .transferSetup = (DRV_APA102_PLIB_TRANSFER_SETUP)FLEXCOM7_SPI_TransferSetup,
         .callbackRegister = (DRV_APA102_PLIB_CALLBACK_REGISTER)FLEXCOM7_SPI_CallbackRegister,
         .IsBusy = (DRV_APA102_PLIB_ISBUSY)FLEXCOM7_SPI_IsBusy,
-        .IsTransmitterBusy = (DRV_APA102_PLIB_ISTRANSMITTERBUSY)FLEXCOM7_SPI_IsTransmitterBusy,
     },
 };
 

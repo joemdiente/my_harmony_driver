@@ -43,7 +43,7 @@ void DRV_APA102_EventHandlerSet(const DRV_HANDLE handle, const DRV_APA102_APP_CA
 
 bool DRV_APA102_ConfigSet(const DRV_HANDLE handle, DRV_APA102_CONFIG_PARAMS* config);
 
-bool DRV_APA102_UpdateStrip (const DRV_HANDLE handle);
+bool DRV_APA102_UpdateLEDs (const DRV_HANDLE handle);
 
 //bool DRV_APA102_WriteArray(const DRV_HANDLE handle, DRV_APA102_RGB_ARRAY* rgbArr);
 #endif /* _DRV_APA102_H */

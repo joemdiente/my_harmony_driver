@@ -45,8 +45,6 @@ DRV_APA102_PAYLOAD_LED_FRAMES* rgbData;
 
 volatile bool isWriteToLEDDone = false;
 volatile bool WriteLEDError = true;
-uint16_t rawTemperatureData = 0;
-uint8_t temperature = 0;
 uint8_t wrBuffer[2];
 uint8_t rdBuffer[2];
 
@@ -85,13 +83,6 @@ int main ( void )
     
     rgbData = DRV_APA102_AllocateBuffer(rgbHandle);
 
-    rgbData[0].ledBrightness = 20;
-    rgbData[0].red = 200;
-    rgbData[0].blue = 123;
-    rgbData[0].padBits = 0b111;
-    
-    DRV_APA102_UpdateStrip (rgbHandle);
-    SYS_CONSOLE_MESSAGE("End of Test\r\n");
     
     while ( true )
     {

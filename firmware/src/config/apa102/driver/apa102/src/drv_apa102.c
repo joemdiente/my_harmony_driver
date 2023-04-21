@@ -10,7 +10,7 @@
 //------------------------------------------------------------------------------------------------  
 
 /* Debug */
-#define DRV_APA102_DEBUG
+//#define DRV_APA102_DEBUG 
 
 #include "driver/apa102/drv_apa102.h"
 #include "driver/apa102/drv_apa102_local.h"
@@ -116,7 +116,7 @@ static void DRV_APA102_PLIBEventHandler(uintptr_t contextHandle)
  * APA102 Driver Configuration
  */
 
-bool DRV_APA102_UpdateStrip (const DRV_HANDLE handle)
+bool DRV_APA102_UpdateLEDs (const DRV_HANDLE handle)
 {
     DRV_APA102_OBJ* dObj     = NULL;
 
@@ -153,16 +153,9 @@ bool DRV_APA102_UpdateStrip (const DRV_HANDLE handle)
 DRV_APA102_PAYLOAD_LED_FRAMES* DRV_APA102_AllocateBuffer(const DRV_HANDLE handle)
 {
     DRV_APA102_OBJ* dObj     = NULL;
-
-#ifdef DRV_APA102_DEBUG
-    SYS_CONSOLE_PRINT("INFO: %s\r\n",__func__);
-#endif
     
     if (handle >= DRV_APA102_INSTANCES_NUMBER)
     {
-#ifdef DRV_APA102_DEBUG
-        SYS_CONSOLE_MESSAGE("ERROR: index >= instance number\r\n");
-#endif
         return (DRV_APA102_PAYLOAD_LED_FRAMES*)NULL;
     }
     
@@ -193,15 +186,8 @@ bool DRV_APA102_ConfigSet(const DRV_HANDLE handle, DRV_APA102_CONFIG_PARAMS* con
 {
     DRV_APA102_OBJ* dObj     = NULL;
     
-#ifdef DRV_APA102_DEBUG
-    SYS_CONSOLE_PRINT("INFO: %s\r\n",__func__);
-#endif
-    
     if (handle >= DRV_APA102_INSTANCES_NUMBER)
     {
-#ifdef DRV_APA102_DEBUG
-        SYS_CONSOLE_MESSAGE("ERROR: index >= instance number\r\n");
-#endif
         return SYS_MODULE_OBJ_INVALID;
     }
     
@@ -212,50 +198,33 @@ bool DRV_APA102_ConfigSet(const DRV_HANDLE handle, DRV_APA102_CONFIG_PARAMS* con
     //Check LED Count
     if (config->ledCnt <= 0)
     {
-#ifdef DRV_APA102_DEBUG
-        SYS_CONSOLE_PRINT("ERROR: No. of LEDs: %u is less than 1.\r\n",dObj->drvConf.ledCnt);
-#endif
         return SYS_MODULE_OBJ_INVALID;
-    }
-    else
-    {
-#ifdef DRV_APA102_DEBUG
-        SYS_CONSOLE_PRINT("INFO: No. of LEDs: %u\r\n",dObj->drvConf.ledCnt);
-#endif 
     }
     //Check Clock Frequency
     if (config->transferParams.clkFreq >= DRV_APA102_MAX_CLK ||
             config->transferParams.clkFreq <= DRV_APA102_MIN_CLK)
     {
-#ifdef DRV_APA102_DEBUG
-        SYS_CONSOLE_MESSAGE("ERROR: Clock speed not in specs\r\n");
-        SYS_CONSOLE_PRINT("INFO: CLK: %lu Hz\r\n",dObj->drvConf.transferParams.clkFreq);
-#endif
         return SYS_MODULE_OBJ_INVALID;
     }
     
     /* Unsure */
     if (config->drvOper == DRV_APA102_LED_STRIP)
     {
-#ifdef DRV_APA102_DEBUG
-        SYS_CONSOLE_MESSAGE("INFO: Mode is LED Strip\r\n");
-#endif
     }
     else
     {
-#ifdef DRV_APA102_DEBUG
-        SYS_CONSOLE_MESSAGE("ERROR: Unknown/Unimplemented Driver Operation\r\n");
-#endif
         return SYS_MODULE_OBJ_INVALID;
     }
     
     //Copy config to drvConf
     dObj->drvConf = *config;
+    
     /* Setup SPI Transfer Parameters (Hardcoded; This is APA102's SPI Mode) */
     dObj->drvConf.transferParams.clkPhase = DRV_APA102_CLOCK_PHASE_VALID_TRAILING_EDGE;
     dObj->drvConf.transferParams.clkPol = DRV_APA102_CLOCK_POLARITY_IDLE_HIGH;
     dObj->drvConf.transferParams.dataBits = DRV_APA102_DATA_BITS_8;
-//    
+    
+    dObj->plibInterface->transferSetup(&dObj->drvConf.transferParams,0);
     dObj->isSetupChanged = true;
     
     return false;
