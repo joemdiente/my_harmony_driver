@@ -66,15 +66,10 @@ static void DRV_APA102_PLIBEventHandler(uintptr_t contextHandle)
     printf("WARNING: Unimplemented %s\r\n",__func__);
 #endif
 }
-// *****************************************************************************
-// *****************************************************************************
-// Section: DRV_APA102 Public Functions
-// *****************************************************************************
-// *****************************************************************************
 /* 
- * APA102 Driver Configuration 
+ * APA102 Update LEDs
  */
-bool DRV_APA102_UpdateLEDs (const DRV_HANDLE handle)
+bool _DRV_APA102_UpdateLEDs (const DRV_HANDLE handle)
 {
     DRV_APA102_OBJ* dObj     = NULL;
 
@@ -138,6 +133,37 @@ bool DRV_APA102_UpdateLEDs (const DRV_HANDLE handle)
     }
     return true;
 }
+// *****************************************************************************
+// *****************************************************************************
+// Section: DRV_APA102 Public Functions
+// *****************************************************************************
+// *****************************************************************************
+bool DRV_APA102_InitializeLED(const DRV_HANDLE handle)
+{
+    DRV_APA102_OBJ* dObj     = NULL;
+
+#ifdef DRV_APA102_DEBUG
+    printf("INFO: %s\r\n",__func__);
+#endif
+    
+    if (handle >= DRV_APA102_INSTANCES_NUMBER)
+    {
+#ifdef DRV_APA102_DEBUG
+        printf("ERROR: index >= instance number\r\n");
+#endif
+        return NULL;
+    }
+    
+    dObj = &gDrvAPA102Obj[handle];
+    
+    //Initialize memory
+    memset(dObj->ptrPayload,0,dObj->sizePayload);
+    
+    _DRV_APA102_UpdateLEDs(handle);
+
+    return true;
+}
+
 /* 
  * APA102 Dynamic Buffer Allocation
  * based on LED count 
@@ -163,9 +189,6 @@ DRV_APA102_PAYLOAD_LED_FRAMES* DRV_APA102_AllocateBuffer(const DRV_HANDLE handle
 
     //Allocate memory
     dObj->ptrPayload = OSAL_Malloc((size_t)dObj->sizePayload);
-
-    //Initialize memory
-    memset(dObj->ptrPayload,0,dObj->sizePayload);
 
     if(dObj->ptrPayload != NULL)
     {

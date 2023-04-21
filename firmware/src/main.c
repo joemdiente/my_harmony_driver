@@ -57,14 +57,29 @@ const uint8_t main_menu[] =
     "\r\n"
     "1: Fading LEDs\r\n"
     "2: Blink LEDs every 1 sec\r\n"
-    "3: Running LEDs\r\n"    
+    "3: Running LEDs\r\n"  
+    "c: LED Configuration\r\n"
     "Press any key to clear screen and print menu\r\n\r\n"
+};
+const uint8_t config_menu[] = 
+{
+    "*** Change LED Values ***\r\n"
+    "Format: x:y:r:g:b \r\n"
+    "   Where: x = LED index \r\n"      
+    "          y = Brightness (0-31) \r\n"    
+    "          r = Red (1-255) \r\n"   
+    "          g = Green  (1-255) \r\n"   
+    "          b = Blue  (1-255) \r\n"   
+    "ex: 1:30:255:255:255\r\n"
+    "\r\n\r\n"
+    "Config: "
 };
 typedef enum
 {
     CMD_LED_DEMO_FADE = '1',
     CMD_LED_DEMO_BLINK = '2',
     CMD_LED_DEMO_RUN = '3',
+    CMD_LED_CONFIG = 'c',
 }CMD;
 char cmd;
 
@@ -102,60 +117,50 @@ int main ( void )
     };
 
     rgbData = DRV_APA102_AllocateBuffer(rgbHandle);
-    rgbData[0].ledBrightness = 0;
-    rgbData[1].ledBrightness = 0;
-    rgbData[2].ledBrightness = 0;
-    DRV_APA102_UpdateLEDs (rgbHandle);
+    DRV_APA102_InitializeLED(rgbHandle);
 
     while ( true )
     {
-//        printf ("\33[H\33[2J");
+        printf ("\33[H\33[2J");
         printf("%s", main_menu);
         scanf("%c", &cmd);
         
         switch(cmd)
         {
             case CMD_LED_DEMO_FADE:
-//                printf ("\33[H\33[2J");
-                memset(&rgbData[0], 0, sizeof(&rgbData));
-                memset(&rgbData[1], 0, sizeof(&rgbData));
-                memset(&rgbData[2], 0, sizeof(&rgbData));
-                rgbData[0].ledBrightness = 30;
-                rgbData[0].red = 255;
-                
+                printf ("\33[H\33[2J");
                 printf("Fading LED Demo\r\n");
                 printf("Press Any Key to Exit\r\n");
-                DRV_APA102_UpdateLEDs (rgbHandle);
+                DRV_APA102_InitializeLED(rgbHandle);
                 scanf("%c", &cmd);
                 
                 break;
 
             case CMD_LED_DEMO_BLINK:
-//                printf ("\33[H\33[2J");
-                memset(&rgbData[0], 0, sizeof(&rgbData));
-                memset(&rgbData[1], 0, sizeof(&rgbData));
-                memset(&rgbData[2], 0, sizeof(&rgbData));
-                rgbData[1].ledBrightness = 30;
-                rgbData[1].blue = 255;
+                printf ("\33[H\33[2J");
                 printf("Blink LEDs every 1 Sec. Demo\r\n");
                 printf("Press Any Key to Exit\r\n");
-                DRV_APA102_UpdateLEDs (rgbHandle);
+
                 scanf("%c", &cmd);
                 break;
 
             case CMD_LED_DEMO_RUN:
-//                printf ("\33[H\33[2J");
-                memset(&rgbData[0], 0, sizeof(&rgbData));
-                memset(&rgbData[1], 0, sizeof(&rgbData));
-                memset(&rgbData[2], 0, sizeof(&rgbData));
-                rgbData[2].ledBrightness = 30;
-                rgbData[2].green = 255;
+                printf ("\33[H\33[2J");
                 printf("Running LED Demo\r\n");
                 printf("Press Any Key to Exit\r\n");
-                DRV_APA102_UpdateLEDs (rgbHandle);
                 scanf("%c", &cmd);
                 break;
+            case CMD_LED_CONFIG:
                 
+                printf("%s", config_menu);
+                scanf("%c", &cmd);
+                switch(cmd)
+                {
+                    
+                    default:
+                        break;
+                }
+                break;
             default:    
                 break;
         }
