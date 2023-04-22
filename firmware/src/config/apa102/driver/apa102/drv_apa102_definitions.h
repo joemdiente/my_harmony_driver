@@ -187,18 +187,25 @@ typedef void (*DRV_APA102_APP_CALLBACK)(DRV_APA102_EVENT event, uintptr_t contex
 typedef void (* DRV_APA102_PLIB_CALLBACK)( uintptr_t context);
 
 // function prototypes of PLIB APIs
-typedef bool (* DRV_APA102_PLIB_WRITE)( uint8_t*, uint16_t);
-typedef bool (* DRV_APA102_PLIB_TRANSFER_SETUP)(DRV_APA102_TRANSFER_SETUP* setup, uint32_t srcClkFreq);
-typedef void (* DRV_APA102_PLIB_CALLBACK_REGISTER)(DRV_APA102_PLIB_CALLBACK, uintptr_t);
+typedef bool (* DRV_APA102_PLIB_SPI_WRITE)( uint8_t*, uint16_t);
+typedef bool (* DRV_APA102_PLIB_SPI_TRANSFER_SETUP)(DRV_APA102_TRANSFER_SETUP* setup, uint32_t srcClkFreq);
+typedef void (* DRV_APA102_PLIB_SPI_CALLBACK_REGISTER)(DRV_APA102_PLIB_CALLBACK, uintptr_t);
 typedef bool (* DRV_APA102_PLIB_ISTRANSMITTERBUSY)(void);
-typedef bool (* DRV_APA102_PLIB_ISBUSY)(void);
+typedef bool (* DRV_APA102_PLIB_SPI_ISBUSY)(void);
+typedef bool (* DRV_APA102_PLIB_TC_START) (void);
+typedef bool (* DRV_APA102_PLIB_TC_STOP) (void);
+typedef bool (* DRV_APA102_PLIB_TC_CALLBACK_REGISTER)(DRV_APA102_PLIB_CALLBACK, uintptr_t);
 
 typedef struct
 {
-    DRV_APA102_PLIB_WRITE                          write;
-    DRV_APA102_PLIB_TRANSFER_SETUP                 transferSetup;
-    DRV_APA102_PLIB_CALLBACK_REGISTER              callbackRegister;  
-    DRV_APA102_PLIB_ISBUSY                         IsBusy;
+    DRV_APA102_PLIB_SPI_WRITE                          write;
+    DRV_APA102_PLIB_SPI_TRANSFER_SETUP                 transferSetup;
+    DRV_APA102_PLIB_SPI_CALLBACK_REGISTER              spiCallbackRegister;  
+    DRV_APA102_PLIB_SPI_ISBUSY                         IsBusy;
+    DRV_APA102_PLIB_TC_START                           startTc;
+    DRV_APA102_PLIB_TC_STOP                            stopTc;
+    DRV_APA102_PLIB_TC_CALLBACK_REGISTER               tcCallbackRegister;
+    
 } DRV_APA102_PLIB_INTERFACE;
 
 typedef struct

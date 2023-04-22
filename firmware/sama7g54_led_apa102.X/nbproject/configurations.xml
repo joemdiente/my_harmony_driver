@@ -11,14 +11,6 @@
               <itemPath>../src/config/apa102/driver/apa102/drv_apa102.h</itemPath>
               <itemPath>../src/config/apa102/driver/apa102/drv_apa102_definitions.h</itemPath>
               <itemPath>../src/config/apa102/driver/apa102/drv_apa102_local.h</itemPath>
-              <itemPath>../src/config/apa102/driver/apa102/drv_apa102_debug_helper.h</itemPath>
-            </logicalFolder>
-            <logicalFolder name="spi_flash" displayName="spi_flash" projectFiles="true">
-              <logicalFolder name="at25df" displayName="at25df" projectFiles="true">
-                <itemPath>../src/config/apa102/driver/spi_flash/at25df/drv_at25df_definitions.h</itemPath>
-                <itemPath>../src/config/apa102/driver/spi_flash/at25df/src/drv_at25df_local.h</itemPath>
-                <itemPath>../src/config/apa102/driver/spi_flash/at25df/drv_at25df.h</itemPath>
-              </logicalFolder>
             </logicalFolder>
             <itemPath>../src/config/apa102/driver/driver.h</itemPath>
             <itemPath>../src/config/apa102/driver/driver_common.h</itemPath>
@@ -40,7 +32,6 @@
                 <logicalFolder name="master" displayName="master" projectFiles="true">
                   <itemPath>../src/config/apa102/peripheral/flexcom/spi/master/plib_flexcom_spi_master_common.h</itemPath>
                   <itemPath>../src/config/apa102/peripheral/flexcom/spi/master/plib_flexcom7_spi_master.h</itemPath>
-                  <itemPath>../src/config/apa102/peripheral/flexcom/spi/master/plib_flexcom9_spi_master.h</itemPath>
                 </logicalFolder>
               </logicalFolder>
               <logicalFolder name="usart" displayName="usart" projectFiles="true">
@@ -72,32 +63,31 @@
             <logicalFolder name="debug" displayName="debug" projectFiles="true">
               <itemPath>../src/config/apa102/system/debug/sys_debug.h</itemPath>
             </logicalFolder>
+            <logicalFolder name="dma" displayName="dma" projectFiles="true">
+              <itemPath>../src/config/apa102/system/dma/sys_dma.h</itemPath>
+              <itemPath>../src/config/apa102/system/dma/sys_dma_mapping.h</itemPath>
+            </logicalFolder>
             <logicalFolder name="int" displayName="int" projectFiles="true">
               <itemPath>../src/config/apa102/system/int/sys_int_mapping.h</itemPath>
               <itemPath>../src/config/apa102/system/int/sys_int.h</itemPath>
             </logicalFolder>
             <logicalFolder name="ports" displayName="ports" projectFiles="true">
-              <itemPath>../src/config/apa102/system/ports/sys_ports_mapping.h</itemPath>
               <itemPath>../src/config/apa102/system/ports/sys_ports.h</itemPath>
+              <itemPath>../src/config/apa102/system/ports/sys_ports_mapping.h</itemPath>
             </logicalFolder>
             <logicalFolder name="reset" displayName="reset" projectFiles="true">
               <itemPath>../src/config/apa102/system/reset/sys_reset.h</itemPath>
-            </logicalFolder>
-            <logicalFolder name="time" displayName="time" projectFiles="true">
-              <itemPath>../src/config/apa102/system/time/src/sys_time_local.h</itemPath>
-              <itemPath>../src/config/apa102/system/time/sys_time.h</itemPath>
-              <itemPath>../src/config/apa102/system/time/sys_time_definitions.h</itemPath>
             </logicalFolder>
             <itemPath>../src/config/apa102/system/system_module.h</itemPath>
             <itemPath>../src/config/apa102/system/system_common.h</itemPath>
             <itemPath>../src/config/apa102/system/system.h</itemPath>
           </logicalFolder>
           <itemPath>../src/config/apa102/definitions.h</itemPath>
-          <itemPath>../src/config/apa102/user.h</itemPath>
           <itemPath>../src/config/apa102/toolchain_specifics.h</itemPath>
           <itemPath>../src/config/apa102/interrupts.h</itemPath>
           <itemPath>../src/config/apa102/device_cache.h</itemPath>
           <itemPath>../src/config/apa102/device.h</itemPath>
+          <itemPath>../src/config/apa102/user.h</itemPath>
           <itemPath>../src/config/apa102/configuration.h</itemPath>
         </logicalFolder>
       </logicalFolder>
@@ -293,12 +283,6 @@
           <logicalFolder name="driver" displayName="driver" projectFiles="true">
             <logicalFolder name="f1" displayName="apa102" projectFiles="true">
               <itemPath>../src/config/apa102/driver/apa102/src/drv_apa102.c</itemPath>
-              <itemPath>../src/config/apa102/driver/apa102/src/drv_apa102_debug.c</itemPath>
-            </logicalFolder>
-            <logicalFolder name="spi_flash" displayName="spi_flash" projectFiles="true">
-              <logicalFolder name="at25df" displayName="at25df" projectFiles="true">
-                <itemPath>../src/config/apa102/driver/spi_flash/at25df/src/drv_at25df.c</itemPath>
-              </logicalFolder>
             </logicalFolder>
           </logicalFolder>
           <logicalFolder name="peripheral" displayName="peripheral" projectFiles="true">
@@ -312,7 +296,6 @@
               <logicalFolder name="spi" displayName="spi" projectFiles="true">
                 <logicalFolder name="master" displayName="master" projectFiles="true">
                   <itemPath>../src/config/apa102/peripheral/flexcom/spi/master/plib_flexcom7_spi_master.c</itemPath>
-                  <itemPath>../src/config/apa102/peripheral/flexcom/spi/master/plib_flexcom9_spi_master.c</itemPath>
                 </logicalFolder>
               </logicalFolder>
               <logicalFolder name="usart" displayName="usart" projectFiles="true">
@@ -342,26 +325,26 @@
             <logicalFolder name="cache" displayName="cache" projectFiles="true">
               <itemPath>../src/config/apa102/system/cache/sys_cache.c</itemPath>
             </logicalFolder>
+            <logicalFolder name="dma" displayName="dma" projectFiles="true">
+              <itemPath>../src/config/apa102/system/dma/sys_dma.c</itemPath>
+            </logicalFolder>
             <logicalFolder name="int" displayName="int" projectFiles="true">
               <itemPath>../src/config/apa102/system/int/src/sys_int.c</itemPath>
             </logicalFolder>
             <logicalFolder name="reset" displayName="reset" projectFiles="true">
               <itemPath>../src/config/apa102/system/reset/sys_reset.c</itemPath>
             </logicalFolder>
-            <logicalFolder name="time" displayName="time" projectFiles="true">
-              <itemPath>../src/config/apa102/system/time/src/sys_time.c</itemPath>
-            </logicalFolder>
           </logicalFolder>
           <itemPath>../src/config/apa102/cstartup.S</itemPath>
-          <itemPath>../src/config/apa102/tasks.c</itemPath>
           <itemPath>../src/config/apa102/initialization.c</itemPath>
           <itemPath>../src/config/apa102/interrupts.c</itemPath>
           <itemPath>../src/config/apa102/fault_handlers.c</itemPath>
+          <itemPath>../src/config/apa102/tasks.c</itemPath>
         </logicalFolder>
       </logicalFolder>
-      <itemPath>../src/app.c</itemPath>
       <itemPath>../src/main.c</itemPath>
       <itemPath>../src/config/apa102/pin_configurations.csv</itemPath>
+      <itemPath>../src/app.c</itemPath>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
                    displayName="Important Files"

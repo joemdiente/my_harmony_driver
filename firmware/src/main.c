@@ -54,8 +54,7 @@ const uint8_t main_menu[] =
     "Connect APA102 RPi HAT in RPi Connector \r\n"
     "\r\n"
     "1: Fading LEDs\r\n"
-    "2: Blink LEDs \r\n"
-    "3: Running LEDs\r\n"  
+    "2: Blink LEDs \r\n" 
     "r: Run Demo\r\n"
     "s: Stop Demo\r\n"
     "Press any key to clear screen and print menu\r\n\r\n"
@@ -64,7 +63,6 @@ typedef enum
 {
     CMD_LED_DEMO_FADE = '1',
     CMD_LED_DEMO_BLINK = '2',
-    CMD_LED_DEMO_RUN = '3',
     CMD_LED_INSTRUCTIONS_RUN = 'r',
     CMD_LED_INSTRUCTIONS_STOP = 's',
     CMD_LED_TEST = '0',
@@ -94,7 +92,7 @@ void drvAPA102EventHandler(DRV_APA102_EVENT event, uintptr_t context)
 void demoLEDFade(void)
 {
 //    printf ("\33[H\33[2J");
-    printf("Setup Instructions for Fading LED Demo\r\n");
+    printf("Setting up Instructions for Fading LED Demo\r\n");
     
     uint8_t i, x=0;
     /* Setup Instruction for LED Fade */
@@ -167,13 +165,6 @@ int main ( void )
                 scanf("%c", &cmd);
                 break;
 
-            case CMD_LED_DEMO_RUN:
-                printf ("\33[H\33[2J");
-                printf("Running LED Demo\r\n");
-                printf("Press Any Key to Stop\r\n");
-//                demoLEDRun();
-                scanf("%c", &cmd);
-                break;
             case CMD_LED_INSTRUCTIONS_RUN:
                 DRV_APA102_Instruction_Run(rgbHandle, 5, REPEAT);
                 break;

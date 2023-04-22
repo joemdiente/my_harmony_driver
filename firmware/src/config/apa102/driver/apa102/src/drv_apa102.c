@@ -19,10 +19,6 @@
 #include <string.h>
 #include <stdio.h>
 
-#ifdef DRV_APA102_DEBUG
-#include "driver/apa102/drv_apa102_debug_helper.h"
-#endif
-
 /* Driver Instance */
 #define DRV_APA102_INSTANCES_NUMBER            1
 
@@ -449,7 +445,7 @@ SYS_MODULE_OBJ DRV_APA102_Initialize(
     
     /* Initialize pLibInterface */
     dObj->plibInterface = APA102Init->plibInterface;
-    dObj->plibInterface->callbackRegister(DRV_APA102_PLIBEventHandler, (uintptr_t)dObj);
+    dObj->plibInterface->spiCallbackRegister(DRV_APA102_PLIBEventHandler, (uintptr_t)dObj);
     
     /* Initialize Driver Variables  */
     dObj->isBusy = false;

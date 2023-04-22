@@ -1,22 +1,20 @@
 /*******************************************************************************
-  FLEXCOM9 SPI PLIB
+  DMA System Service Library Implementation Source File
 
-  Company:
+  Company
     Microchip Technology Inc.
 
-  File Name:
-    plib_flexcom9_spi_master.h
+  File Name
+    sys_dma.c
 
-  Summary:
-   FLEXCOM9 SPI Master PLIB Header File.
+  Summary
+    DMA system service library interface implementation.
 
   Description
-    This file defines the interface to the FLEXCOM SPI peripheral library.
-    This library provides access to and control of the associated
-    peripheral instance.
+    This file implements the interface to the DMA system service library.
 
   Remarks:
-    None.
+    DMA controller initialize will be done from within the MCC.
 
 *******************************************************************************/
 
@@ -45,49 +43,37 @@
 *******************************************************************************/
 // DOM-IGNORE-END
 
-#ifndef PLIB_FLEXCOM9_SPI_MASTER_H // Guards against multiple inclusion
-#define PLIB_FLEXCOM9_SPI_MASTER_H
-
 // *****************************************************************************
 // *****************************************************************************
 // Section: Included Files
 // *****************************************************************************
 // *****************************************************************************
-/* This section lists the other files that are included in this file.
+#include "system/dma/sys_dma.h"
+
+//******************************************************************************
+/* Function:
+    void SYS_DMA_AddressingModeSetup(SYS_DMA_CHANNEL channel, SYS_DMA_SOURCE_ADDRESSING_MODE sourceAddrMode, SYS_DMA_DESTINATION_ADDRESSING_MODE destAddrMode);
+
+  Summary:
+    Setup addressing mode of selected DMA channel.
+
+  Remarks:
+    Check sys_dma.h for more info.
 */
+void SYS_DMA_AddressingModeSetup(SYS_DMA_CHANNEL channel, SYS_DMA_SOURCE_ADDRESSING_MODE sourceAddrMode, SYS_DMA_DESTINATION_ADDRESSING_MODE destAddrMode)
+{
+}
 
-#include "device.h"
-#include "plib_flexcom_spi_master_common.h"
+//******************************************************************************
+/* Function:
+    void SYS_DMA_DataWidthSetup(SYS_DMA_CHANNEL channel, SYS_DMA_WIDTH dataWidth);
 
-// DOM-IGNORE-BEGIN
-#ifdef __cplusplus // Provide C++ Compatibility
+  Summary:
+    Setup data width of selected DMA channel.
 
-extern "C" {
-
-#endif
-
-// DOM-IGNORE-END
-
-/****************************** FLEXCOM9 SPI Interface *********************************/
-
-void FLEXCOM9_SPI_Initialize( void );
-bool FLEXCOM9_SPI_WriteRead( void * pTransmitData, size_t txSize, void * pReceiveData, size_t rxSize );
-bool FLEXCOM9_SPI_Write( void * pTransmitData, size_t txSize );
-bool FLEXCOM9_SPI_Read( void * pReceiveData, size_t rxSize );
-bool FLEXCOM9_SPI_TransferSetup( FLEXCOM_SPI_TRANSFER_SETUP * setup, uint32_t spiSourceClock );
-bool FLEXCOM9_SPI_IsTransmitterBusy(void);
-bool FLEXCOM9_SPI_IsBusy( void );
-void FLEXCOM9_SPI_CallbackRegister( FLEXCOM_SPI_CALLBACK callback, uintptr_t context );
-
-/* Provide C++ Compatibility */
-#ifdef __cplusplus
-
-    }
-
-#endif
-
-#endif // PLIB_FLEXCOM9_SPI_MASTER_H
-
-/*******************************************************************************
- End of File
+  Remarks:
+    Check sys_dma.h for more info.
 */
+void SYS_DMA_DataWidthSetup(SYS_DMA_CHANNEL channel, SYS_DMA_WIDTH dataWidth)
+{
+}
