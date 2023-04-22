@@ -59,6 +59,7 @@
 
 void FLEXCOM7_InterruptHandler (void);
 void FLEXCOM9_InterruptHandler (void);
+void TC0_CH0_InterruptHandler (void);
 
 
 

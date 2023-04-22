@@ -88,7 +88,17 @@ void drvAPA102EventHandler(DRV_APA102_EVENT event, uintptr_t context)
 }
 void demoLEDFade(void)
 {
+    uint8_t i;
+    /* Setup Buffer */
     
+    for(i = 0; i <= confParam.instructionMaxCnt; i++)
+    {
+        rgbData = DRV_APA102_GetLedFramePtrAtIndex(rgbHandle, i);
+        rgbData[0].ledBrightness = 30;
+        rgbData[0].red = 255;
+        rgbData[1].green = i;
+    }
+    DRV_APA102_ExecuteInstructions(rgbHandle, 5);
 }
 bool configLED(DRV_APA102_PAYLOAD_LED_FRAME* userData);
 
@@ -100,8 +110,8 @@ int main ( void )
     rgbHandle = DRV_APA102_Open(DRV_APA102_INSTANCE_0, 0);
     DRV_APA102_EventHandlerSet(rgbHandle, drvAPA102EventHandler, 0);
     
-    confParam.instructionCnt = 2;
-    confParam.ledCnt = 3;   
+    confParam.instructionMaxCnt = 5;
+    confParam.ledMaxCnt = 3;   
     confParam.transferParams.clkFreq = 1000000;
     confParam.drvOper = DRV_APA102_LED_STRIP;
     if(DRV_APA102_ConfigSet(rgbHandle,&confParam) != true)
@@ -115,26 +125,18 @@ int main ( void )
         printf("Buffer Allocation Failed\r\n");
     }
     
-    uint16_t i;
-    uint8_t c = 0;
-    for(i = 0; i < confParam.instructionCnt; i++)
-    {
-        rgbData = DRV_APA102_GetLedFramePtrAtIndex(rgbHandle, i);
-        memset(rgbData, c++, sizeof(rgbData)*confParam.ledCnt);
-    }
-    
     DRV_APA102_InitializeLED(rgbHandle);
     
     while (true)
     {
 //        printf ("\33[H\33[2J");
-//        printf("%s", main_menu);
+        printf("%s", main_menu);
         scanf("%c", &cmd);
         
         switch(cmd)
         {
             case CMD_LED_DEMO_FADE:
-                printf ("\33[H\33[2J");
+//                printf ("\33[H\33[2J");
                 printf("Fading LED Demo\r\n");
                 printf("Press Any Key to Exit\r\n");
                 demoLEDFade();

@@ -48,10 +48,9 @@ DRV_APA102_PAYLOAD_LED_FRAME* DRV_APA102_GetLedFramePtrAtIndex (const DRV_HANDLE
 
 //Driver Write APIs
 bool DRV_APA102_InitializeLED(const DRV_HANDLE handle);
-bool DRV_APA102_WriteLEDs(const DRV_HANDLE handle);
+bool DRV_APA102_SendInstruction(const DRV_HANDLE handle);
+bool DRV_APA102_ExecuteInstructions(const DRV_HANDLE handle, uint16_t cntInstruction);
 
-bool DRV_APA102_InstructionWriter(const DRV_HANDLE handle, DRV_APA102_PAYLOAD_LED_FRAME* rgbData, uint32_t index);
-//bool DRV_APA102_WriteArray(const DRV_HANDLE handle, DRV_APA102_RGB_ARRAY* rgbArr);
 #endif /* _DRV_APA102_H */
 
 /* *****************************************************************************

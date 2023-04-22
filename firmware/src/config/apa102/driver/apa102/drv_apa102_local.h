@@ -51,8 +51,8 @@ typedef struct
     DRV_APA102_PAYLOAD_PTR* currPtrPayload;
     DRV_APA102_PAYLOAD_SIZE sizePayload;
     DRV_APA102_INSTRUCTION_PTR* ptrInstruction;
-    DRV_APA102_INSTRUCTION_CURR currInstructionIndex;
-
+    DRV_APA102_INSTRUCTION_INDEX currInstructionIndex;
+    DRV_APA102_INSTRUCTION_INDEX totalInstruction;
     
 }DRV_APA102_OBJ;
 

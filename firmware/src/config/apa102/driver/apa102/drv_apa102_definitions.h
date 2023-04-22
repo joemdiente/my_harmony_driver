@@ -111,8 +111,8 @@ typedef struct
 /* Configuration */
 typedef struct
 {
-    uint32_t ledCnt;  
-    uint32_t instructionCnt;
+    uint32_t ledMaxCnt;  
+    uint32_t instructionMaxCnt;
     DRV_APA102_TRANSFER_SETUP transferParams;
     DRV_APA102_MODE drvOper;
 }DRV_APA102_CONFIG_PARAMS;
@@ -167,7 +167,7 @@ typedef enum
 typedef uint16_t DRV_APA102_PAYLOAD_SIZE;
 typedef uint32_t DRV_APA102_PAYLOAD_PTR; 
 typedef uint32_t DRV_APA102_INSTRUCTION_PTR;
-typedef uint16_t DRV_APA102_INSTRUCTION_CURR;
+typedef uint16_t DRV_APA102_INSTRUCTION_INDEX;
 typedef uint16_t DRV_APA102_BUFFER_SIZE;
 typedef uint32_t DRV_APA102_LIST_INDEX;
 

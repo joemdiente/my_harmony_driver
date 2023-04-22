@@ -95,6 +95,7 @@ static void initPeripheralClocks(void)
         { ID_FLEXCOM3, 1U, 0U, 0U, 0U},
         { ID_FLEXCOM7, 1U, 0U, 0U, 0U},
         { ID_FLEXCOM9, 1U, 0U, 0U, 0U},
+        { ID_TC0_CHANNEL0, 1U, 0U, 0U, 0U},
         { ID_PERIPH_MAX + 1, 0U, 0U, 0U, 0U}//end of list marker
     };
 

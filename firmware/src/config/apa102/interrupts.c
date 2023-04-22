@@ -156,7 +156,6 @@ void SPDIFRX_Handler( void )             __attribute__((weak, alias("DefaultInte
 void SPDIFTX_Handler( void )             __attribute__((weak, alias("DefaultInterruptHandler")));
 void SSC0_Handler( void )                __attribute__((weak, alias("DefaultInterruptHandler")));
 void SSC1_Handler( void )                __attribute__((weak, alias("DefaultInterruptHandler")));
-void TC0_CH0_Handler( void )             __attribute__((weak, alias("DefaultInterruptHandler")));
 void TC0_CH1_Handler( void )             __attribute__((weak, alias("DefaultInterruptHandler")));
 void TC0_CH2_Handler( void )             __attribute__((weak, alias("DefaultInterruptHandler")));
 void TC1_CH0_Handler( void )             __attribute__((weak, alias("DefaultInterruptHandler")));
@@ -329,7 +328,7 @@ PPI_SPI_HANDLER gicPIVectorTable[171U] =
     SPDIFTX_Handler,
     SSC0_Handler,
     SSC1_Handler,
-    TC0_CH0_Handler,
+    TC0_CH0_InterruptHandler,
     TC0_CH1_Handler,
     TC0_CH2_Handler,
     TC1_CH0_Handler,

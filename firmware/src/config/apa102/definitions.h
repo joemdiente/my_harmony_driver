@@ -58,6 +58,7 @@
 #include "peripheral/pio/plib_pio.h"
 #include "peripheral/flexcom/spi/master/plib_flexcom9_spi_master.h"
 #include "peripheral/flexcom/usart/plib_flexcom3_usart.h"
+#include "peripheral/tc/plib_tc0.h"
 #include "driver/spi_flash/at25df/drv_at25df.h"
 #include "system/int/sys_int.h"
 #include "system/ports/sys_ports.h"
@@ -65,6 +66,7 @@
 #include "system/reset/sys_reset.h"
 #include "osal/osal.h"
 #include "system/debug/sys_debug.h"
+#include "system/time/sys_time.h"
 #include "app.h"
 
 #include "driver/apa102/drv_apa102_definitions.h"
@@ -194,6 +196,7 @@ typedef struct
     /* AT25DF Driver Object */
     SYS_MODULE_OBJ drvAT25DF;
 
+    SYS_MODULE_OBJ  sysTime;
 
 } SYSTEM_OBJECTS;
 
