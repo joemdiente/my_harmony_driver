@@ -46,8 +46,6 @@ DRV_APA102_PAYLOAD_LED_FRAME* rgbData;
 
 volatile bool isWriteToLEDDone = false;
 volatile bool WriteLEDError = true;
-uint8_t wrBuffer[2];
-uint8_t rdBuffer[2];
 
 /* Main Menu + Options */
 const uint8_t main_menu[] = 
@@ -56,9 +54,10 @@ const uint8_t main_menu[] =
     "Connect APA102 RPi HAT in RPi Connector \r\n"
     "\r\n"
     "1: Fading LEDs\r\n"
-    "2: Blink LEDs every 1 sec\r\n"
+    "2: Blink LEDs \r\n"
     "3: Running LEDs\r\n"  
-    "c: LED Configuration\r\n"
+    "r: Run Demo\r\n"
+    "s: Stop Demo\r\n"
     "Press any key to clear screen and print menu\r\n\r\n"
 };
 typedef enum
@@ -66,6 +65,8 @@ typedef enum
     CMD_LED_DEMO_FADE = '1',
     CMD_LED_DEMO_BLINK = '2',
     CMD_LED_DEMO_RUN = '3',
+    CMD_LED_INSTRUCTIONS_RUN = 'r',
+    CMD_LED_INSTRUCTIONS_STOP = 's',
     CMD_LED_TEST = '0',
     CMD_LED_CONFIG = 'c',
 }CMD;
@@ -86,19 +87,37 @@ void drvAPA102EventHandler(DRV_APA102_EVENT event, uintptr_t context)
             break;
     }
 }
+
+/*
+ * Demo App LED Fade
+ */
 void demoLEDFade(void)
 {
-    uint8_t i;
-    /* Setup Buffer */
+//    printf ("\33[H\33[2J");
+    printf("Setup Instructions for Fading LED Demo\r\n");
     
-    for(i = 0; i <= confParam.instructionMaxCnt; i++)
+    uint8_t i, x=0;
+    /* Setup Instruction for LED Fade */
+    for(i = 0; i < confParam.instructionMaxCnt; i++)
     {
-        rgbData = DRV_APA102_GetLedFramePtrAtIndex(rgbHandle, i);
-        rgbData[0].ledBrightness = 30;
+        rgbData = DRV_APA102_GetLedFramePtrAtIndex(rgbHandle, x);
+
+        rgbData[0].ledBrightness = x;
+        rgbData[1].ledBrightness = x;
+        rgbData[2].ledBrightness = x;
         rgbData[0].red = 255;
-        rgbData[1].green = i;
+        rgbData[1].green = 255;
+        rgbData[2].blue = 255;
+        
+        x++;
+        if(x > 31) x = 0;
     }
-    DRV_APA102_ExecuteInstructions(rgbHandle, 5);
+    printf("Press Any Key to Exit\r\n");
+    scanf("%c", &cmd);
+}
+void demoLEDBlink(void)
+{
+    
 }
 bool configLED(DRV_APA102_PAYLOAD_LED_FRAME* userData);
 
@@ -110,7 +129,7 @@ int main ( void )
     rgbHandle = DRV_APA102_Open(DRV_APA102_INSTANCE_0, 0);
     DRV_APA102_EventHandlerSet(rgbHandle, drvAPA102EventHandler, 0);
     
-    confParam.instructionMaxCnt = 5;
+    confParam.instructionMaxCnt = 255;
     confParam.ledMaxCnt = 3;   
     confParam.transferParams.clkFreq = 1000000;
     confParam.drvOper = DRV_APA102_LED_STRIP;
@@ -123,6 +142,7 @@ int main ( void )
     if(DRV_APA102_AllocateBuffer(rgbHandle) != true)
     {
         printf("Buffer Allocation Failed\r\n");
+        DRV_APA102_Close(rgbHandle);
     }
     
     DRV_APA102_InitializeLED(rgbHandle);
@@ -136,19 +156,14 @@ int main ( void )
         switch(cmd)
         {
             case CMD_LED_DEMO_FADE:
-//                printf ("\33[H\33[2J");
-                printf("Fading LED Demo\r\n");
-                printf("Press Any Key to Exit\r\n");
-                demoLEDFade();
-                scanf("%c", &cmd);
-                
+                demoLEDFade();                
                 break;
 
             case CMD_LED_DEMO_BLINK:
                 printf ("\33[H\33[2J");
                 printf("Blink LEDs every 1 Sec. Demo\r\n");
                 printf("Press Any Key to Stop\r\n");
-//                demoLEDBlink();
+                demoLEDBlink();
                 scanf("%c", &cmd);
                 break;
 
@@ -159,9 +174,15 @@ int main ( void )
 //                demoLEDRun();
                 scanf("%c", &cmd);
                 break;
+            case CMD_LED_INSTRUCTIONS_RUN:
+                DRV_APA102_Instruction_Run(rgbHandle, 5, REPEAT);
+                break;
                 
+            case CMD_LED_INSTRUCTIONS_STOP:
+                DRV_APA102_Instruction_Stop(rgbHandle);
+                break;
+
             case CMD_LED_TEST:
-//                DRV_APA102_WriteLEDs(rgbHandle, rgbData);
                 break;
                 
             case CMD_LED_CONFIG:

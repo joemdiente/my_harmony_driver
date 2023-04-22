@@ -32,7 +32,6 @@
 DRV_APA102_PAYLOAD_START_FRAME sFrame = SFRAME_VAL; 
 DRV_APA102_PAYLOAD_END_FRAME eFrame = EFRAME_VAL; 
 
-
 DRV_APA102_OBJ gDrvAPA102Obj[DRV_APA102_INSTANCES_NUMBER];
 
 // *****************************************************************************
@@ -49,25 +48,35 @@ static void DRV_APA102_PLIBEventHandler(uintptr_t contextHandle)
 {
     DRV_APA102_OBJ* dObj     = (DRV_APA102_OBJ*) contextHandle;
 
-#ifdef DRV_APA102_DEBUG
-    printf("INFO: %s\r\n",__func__);
-#endif
+    if(dObj->isRunning == true)
+    {
+        //One Instruction was executed
+        dObj->currInstructionIndex++;
+        if(dObj->currInstructionIndex >= dObj->totalInstruction && dObj->shouldRepeat == true)
+        {
+            //Reset Instruction Index
+            dObj->currInstructionIndex = 0;
+        }
+        if(dObj->currInstructionIndex < dObj->totalInstruction)
+        {
+            //Update pointer payload based on current instruction index
+            dObj->currPtrPayload = (DRV_APA102_PAYLOAD_PTR *)(
+                dObj->drvBuffer +
+                (dObj->sizePayload/4) * 
+                dObj->currInstructionIndex);
+            // Write to PLib
+            dObj->plibInterface->write((uint8_t*)dObj->currPtrPayload, dObj->sizePayload);
+        }
+        else
+        {
+            //Stop
+            dObj->currInstructionIndex = 0;
+            dObj->isRunning = false;
+            dObj->isBusy = false;
+        }
+    }
     
-    if(dObj->plibInterface->IsBusy() == true)
-    {
-        dObj->wrInProgress = true;
-    }
-    else
-    {
-        dObj->isBusy = false;
-        dObj->wrInProgress = false;
-    }
 
-    dObj->currInstructionIndex++;
-    if(dObj->currInstructionIndex < dObj->totalInstruction)
-    {
-        DRV_APA102_SendInstruction(contextHandle);
-    }
 }
 /* 
  * APA102 Update LEDs
@@ -75,7 +84,8 @@ static void DRV_APA102_PLIBEventHandler(uintptr_t contextHandle)
 bool _DRV_APA102_FormatAllFrames (const DRV_HANDLE handle)
 {
     DRV_APA102_OBJ* dObj     = NULL;
-
+    uint32_t i;
+    
 #ifdef DRV_APA102_DEBUG
     printf("INFO: %s\r\n",__func__);
 #endif
@@ -86,16 +96,6 @@ bool _DRV_APA102_FormatAllFrames (const DRV_HANDLE handle)
     }
     
     dObj = &gDrvAPA102Obj[handle];
-    
-    //Check if Driver is Busy
-    if(dObj->isBusy)
-    {
-#ifdef DRV_APA102_DEBUG
-        printf("ERROR: Driver is Busy. Write Failed\r\n");
-#endif
-        return false;
-    }
-    dObj->isBusy = true;
     
     //Check if buffer was allocated
     if(dObj->isBufferAllocated != true)
@@ -117,11 +117,10 @@ bool _DRV_APA102_FormatAllFrames (const DRV_HANDLE handle)
                 dObj->currInstructionIndex);
     
         //Format the allocated memory; Ensures LED Frames are always formatted before proceeding with write
-        dObj->currPtrPayload[0] = SFRAME_VAL;                                       //Start Frame 0s*32
+        dObj->currPtrPayload[0] = SFRAME_VAL;                                           //Start Frame 0s*32
         dObj->currPtrPayload[dObj->drvConf.ledMaxCnt + 1] = EFRAME_VAL;                //End Frame 1s*32 (Placed after LED Frames, +1)
     
         //Ensure all padding bits are 1s
-        uint32_t i;
         DRV_APA102_PAYLOAD_LED_FRAME* initLEDFrames = (DRV_APA102_PAYLOAD_LED_FRAME*)&dObj->currPtrPayload[1];
         for(i = 0; i < dObj->drvConf.ledMaxCnt; i++)
         {
@@ -140,39 +139,29 @@ bool _DRV_APA102_FormatAllFrames (const DRV_HANDLE handle)
 // *****************************************************************************
 // *****************************************************************************
 /*
- * APA102 Driver Single Write
- * :: This should be asserted after setting up the buffer
+ * APA102 Driver Run Instruction
  */
-bool DRV_APA102_SendInstruction(const DRV_HANDLE handle)
+bool DRV_APA102_Instruction_Stop(const DRV_HANDLE handle)
 {
     DRV_APA102_OBJ* dObj     = NULL;
     
     if (handle >= DRV_APA102_INSTANCES_NUMBER)
     {
-        return (DRV_APA102_PAYLOAD_LED_FRAME*)NULL;
+        return NULL;
     }
     
     dObj = &gDrvAPA102Obj[handle];
-    _DRV_APA102_FormatAllFrames(handle); 
-    
-    /* Write to PLib */
-    if(dObj->plibInterface->write((uint8_t*)dObj->currPtrPayload, dObj->sizePayload) != true)
-    {
-        return SYS_MODULE_OBJ_INVALID;
-    }
-    else
-    {
-#ifdef DRV_APA102_DEBUG
-        printf("INFO: plibInterface Write Success.\r\n");
-#endif
-    }
+    dObj->currInstructionIndex = 0xFFFF;
+    dObj->shouldRepeat = false;
+    dObj->isRunning = false;
+    dObj->isBusy = false;
     
     return true;
 }
 /*
- * APA102 Driver 
+ * APA102 Driver Run Instruction
  */
-bool DRV_APA102_ExecuteInstructions(const DRV_HANDLE handle, uint16_t cntInstruction)
+bool DRV_APA102_Instruction_Run(const DRV_HANDLE handle, uint16_t cntInstruction, DRV_APA102_INSTRUCTION_FREQUENCY freq)
 {
     DRV_APA102_OBJ* dObj     = NULL;
     
@@ -183,11 +172,40 @@ bool DRV_APA102_ExecuteInstructions(const DRV_HANDLE handle, uint16_t cntInstruc
     
     dObj = &gDrvAPA102Obj[handle];
     
+    if(dObj->isRunning == true)
+    {
+        printf("ERROR: Driver is Running. Initiate Stop()\r\n");
+        return false;
+    }
+    if(dObj->isBusy == true || dObj->plibInterface->IsBusy())
+    {
+        printf("ERROR: Driver and PLIB is Busy\r\n");
+        return false;
+    }
+    
+    if(cntInstruction == 0)
+    {
+        printf("ERROR: Number of Instructions Not Specified\r\n");
+        return false;
+    }
+    
     //Initialize memory
     dObj->currInstructionIndex = 0;
     dObj->totalInstruction = cntInstruction;
+    dObj->shouldRepeat = freq;
+    dObj->isBusy = true;
+    dObj->isRunning = true;
+
+    _DRV_APA102_FormatAllFrames(handle); 
     
-    DRV_APA102_SendInstruction(handle);
+    /* Write to PLib */
+    if(dObj->plibInterface->write((uint8_t*)dObj->currPtrPayload, dObj->sizePayload) != true)
+    {
+#ifdef DRV_APA102_DEBUG
+        printf("ERROR: plibInterface Failed!\r\n");
+#endif
+        return SYS_MODULE_OBJ_INVALID;
+    }
             
     return true;
 }
@@ -207,17 +225,16 @@ bool DRV_APA102_InitializeLED(const DRV_HANDLE handle)
     
     //Initialize memory
     memset(dObj->drvBuffer, 0,dObj->sizePayload);
-    dObj->currInstructionIndex = 0;
-    dObj->totalInstruction = 1;
     
-    DRV_APA102_SendInstruction(handle);
+    DRV_APA102_Instruction_Run(handle, 1, 0);
             
     return true;
 }
 /*
  * 
  */
-DRV_APA102_PAYLOAD_LED_FRAME* DRV_APA102_GetLedFramePtrAtIndex (const DRV_HANDLE handle, DRV_APA102_LIST_INDEX index)
+DRV_APA102_PAYLOAD_LED_FRAME* DRV_APA102_GetLedFramePtrAtIndex (const DRV_HANDLE handle, 
+        DRV_APA102_LIST_INDEX index)
 {
     DRV_APA102_OBJ* dObj     = NULL;
     
@@ -437,9 +454,11 @@ SYS_MODULE_OBJ DRV_APA102_Initialize(
     /* Initialize Driver Variables  */
     dObj->isBusy = false;
     dObj->nClients = 0;
-    dObj->isInitialized = true;
-    dObj->isBufferAllocated = false;
     
+    dObj->isBufferAllocated = false;
+    dObj->isRunning = false;
+    
+    dObj->isInitialized = true;
     return (SYS_MODULE_OBJ)drvIndex;
 }
 /* *****************************************************************************

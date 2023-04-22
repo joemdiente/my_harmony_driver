@@ -37,6 +37,8 @@ typedef struct
     bool wrInProgress;
     bool isSetupChanged;
     bool isBufferAllocated;
+    bool isRunning;
+    bool shouldRepeat;
     uint8_t nClients;
     uintptr_t context;
     
@@ -50,7 +52,6 @@ typedef struct
     DRV_APA102_BUFFER_SIZE sizeBuffer;
     DRV_APA102_PAYLOAD_PTR* currPtrPayload;
     DRV_APA102_PAYLOAD_SIZE sizePayload;
-    DRV_APA102_INSTRUCTION_PTR* ptrInstruction;
     DRV_APA102_INSTRUCTION_INDEX currInstructionIndex;
     DRV_APA102_INSTRUCTION_INDEX totalInstruction;
     

@@ -117,6 +117,12 @@ typedef struct
     DRV_APA102_MODE drvOper;
 }DRV_APA102_CONFIG_PARAMS;
 
+/* Instruction Parameters */
+typedef enum
+{
+    ONCE = 0,
+    REPEAT,
+} DRV_APA102_INSTRUCTION_FREQUENCY;
 /* APA102 Protocols [32 bits/frame]
  * Start Frame                                  End Frame
  *   [0*32]   -   [LED 1]   -   [LED n + 1]   -   [1*32]
