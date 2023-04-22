@@ -100,7 +100,7 @@ int main ( void )
     rgbHandle = DRV_APA102_Open(DRV_APA102_INSTANCE_0, 0);
     DRV_APA102_EventHandlerSet(rgbHandle, drvAPA102EventHandler, 0);
     
-    confParam.instructionCnt = 255;
+    confParam.instructionCnt = 2;
     confParam.ledCnt = 3;   
     confParam.transferParams.clkFreq = 1000000;
     confParam.drvOper = DRV_APA102_LED_STRIP;
@@ -114,16 +114,18 @@ int main ( void )
     {
         printf("Buffer Allocation Failed\r\n");
     }
-    uint32_t i;
+    
+    uint16_t i;
+    uint8_t c = 0;
     for(i = 0; i < confParam.instructionCnt; i++)
     {
         rgbData = DRV_APA102_GetLedFramePtrAtIndex(rgbHandle, i);
-        memset(rgbData, i, sizeof(rgbData)*confParam.ledCnt);
+        memset(rgbData, c++, sizeof(rgbData)*confParam.ledCnt);
     }
     
-//    DRV_APA102_InitializeLED(rgbHandle);
+    DRV_APA102_InitializeLED(rgbHandle);
     
-    while ( true )
+    while (true)
     {
 //        printf ("\33[H\33[2J");
 //        printf("%s", main_menu);
@@ -157,7 +159,7 @@ int main ( void )
                 break;
                 
             case CMD_LED_TEST:
-                DRV_APA102_WriteLEDs(rgbHandle, rgbData);
+//                DRV_APA102_WriteLEDs(rgbHandle, rgbData);
                 break;
                 
             case CMD_LED_CONFIG:

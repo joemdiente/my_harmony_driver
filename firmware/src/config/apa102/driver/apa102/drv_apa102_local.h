@@ -47,10 +47,12 @@ typedef struct
     
     /* Data Containers */    
     DRV_APA102_BUFFER_PTR* drvBuffer;
+    DRV_APA102_BUFFER_SIZE sizeBuffer;
     DRV_APA102_PAYLOAD_PTR* currPtrPayload;
     DRV_APA102_PAYLOAD_SIZE sizePayload;
     DRV_APA102_INSTRUCTION_PTR* ptrInstruction;
-    DRV_APA102_LIST_SIZE sizeList;
+    DRV_APA102_INSTRUCTION_CURR currInstructionIndex;
+
     
 }DRV_APA102_OBJ;
 

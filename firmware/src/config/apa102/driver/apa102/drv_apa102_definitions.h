@@ -157,17 +157,18 @@ typedef enum
 } DRV_APA102_FRAME_TYPE;
 
 /*  General Idea:
- *  [---------List---------]
+ *  [---------Buffer--------]
  *  [Instruction#] [Payload]
+ *        0        [0][x][1]
  *        1        [0][x][1]
- *        2        [0][x][1]
  *      .....
  *        n        [0][x][1]
  */
-typedef uint32_t DRV_APA102_PAYLOAD_SIZE;
+typedef uint16_t DRV_APA102_PAYLOAD_SIZE;
 typedef uint32_t DRV_APA102_PAYLOAD_PTR; 
 typedef uint32_t DRV_APA102_INSTRUCTION_PTR;
-typedef uint32_t DRV_APA102_LIST_SIZE;
+typedef uint16_t DRV_APA102_INSTRUCTION_CURR;
+typedef uint16_t DRV_APA102_BUFFER_SIZE;
 typedef uint32_t DRV_APA102_LIST_INDEX;
 
 /* Main Driver Buffer */
