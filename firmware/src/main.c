@@ -61,24 +61,12 @@ const uint8_t main_menu[] =
     "c: LED Configuration\r\n"
     "Press any key to clear screen and print menu\r\n\r\n"
 };
-const uint8_t config_menu[] = 
-{
-    "*** Change LED Values ***\r\n"
-    "Format: x:y:r:g:b \r\n"
-    "   Where: x = LED index \r\n"      
-    "          y = Brightness (0-31) \r\n"    
-    "          r = Red (1-255) \r\n"   
-    "          g = Green  (1-255) \r\n"   
-    "          b = Blue  (1-255) \r\n"   
-    "ex: 1:30:255:255:255\r\n"
-    "\r\n\r\n"
-    "Config: "
-};
 typedef enum
 {
     CMD_LED_DEMO_FADE = '1',
     CMD_LED_DEMO_BLINK = '2',
     CMD_LED_DEMO_RUN = '3',
+    CMD_LED_TEST = '0',
     CMD_LED_CONFIG = 'c',
 }CMD;
 char cmd;
@@ -102,6 +90,8 @@ void demoLEDFade(void)
 {
     
 }
+bool configLED(DRV_APA102_PAYLOAD_LED_FRAME* userData);
+
 int main ( void )
 {    
     /* Initialize all modules */
@@ -110,22 +100,33 @@ int main ( void )
     rgbHandle = DRV_APA102_Open(DRV_APA102_INSTANCE_0, 0);
     DRV_APA102_EventHandlerSet(rgbHandle, drvAPA102EventHandler, 0);
     
-    confParam.ledCnt = 4;   
+    confParam.instructionCnt = 255;
+    confParam.ledCnt = 3;   
     confParam.transferParams.clkFreq = 1000000;
     confParam.drvOper = DRV_APA102_LED_STRIP;
-    if(DRV_APA102_ConfigSet(rgbHandle,&confParam) != 0)
+    if(DRV_APA102_ConfigSet(rgbHandle,&confParam) != true)
     {
         printf("Driver Configuration Setup Failed\r\n");
         DRV_APA102_Close(rgbHandle);
     };
 
-    rgbData = DRV_APA102_AllocateBuffer(rgbHandle);
-    DRV_APA102_InitializeLED(rgbHandle);
-
+    if(DRV_APA102_AllocateBuffer(rgbHandle) != true)
+    {
+        printf("Buffer Allocation Failed\r\n");
+    }
+    uint32_t i;
+    for(i = 0; i < confParam.instructionCnt; i++)
+    {
+        rgbData = DRV_APA102_GetLedFramePtrAtIndex(rgbHandle, i);
+        memset(rgbData, i, sizeof(rgbData)*confParam.ledCnt);
+    }
+    
+//    DRV_APA102_InitializeLED(rgbHandle);
+    
     while ( true )
     {
-        printf ("\33[H\33[2J");
-        printf("%s", main_menu);
+//        printf ("\33[H\33[2J");
+//        printf("%s", main_menu);
         scanf("%c", &cmd);
         
         switch(cmd)
@@ -133,8 +134,8 @@ int main ( void )
             case CMD_LED_DEMO_FADE:
                 printf ("\33[H\33[2J");
                 printf("Fading LED Demo\r\n");
-                demoLEDFade();
                 printf("Press Any Key to Exit\r\n");
+                demoLEDFade();
                 scanf("%c", &cmd);
                 
                 break;
@@ -142,28 +143,31 @@ int main ( void )
             case CMD_LED_DEMO_BLINK:
                 printf ("\33[H\33[2J");
                 printf("Blink LEDs every 1 Sec. Demo\r\n");
-                printf("Press Any Key to Exit\r\n");
-
+                printf("Press Any Key to Stop\r\n");
+//                demoLEDBlink();
                 scanf("%c", &cmd);
                 break;
 
             case CMD_LED_DEMO_RUN:
                 printf ("\33[H\33[2J");
                 printf("Running LED Demo\r\n");
-                printf("Press Any Key to Exit\r\n");
+                printf("Press Any Key to Stop\r\n");
+//                demoLEDRun();
                 scanf("%c", &cmd);
                 break;
-            case CMD_LED_CONFIG:
                 
-                printf("%s", config_menu);
-                scanf("%c", &cmd);
-                switch(cmd)
-                {
-                    
-                    default:
-                        break;
-                }
+            case CMD_LED_TEST:
+                DRV_APA102_WriteLEDs(rgbHandle, rgbData);
                 break;
+                
+            case CMD_LED_CONFIG:
+                printf ("\33[H\33[2J");
+                printf ("*** Change LED Values ***\r\n");
+                configLED(rgbData);
+                printf ("LED Config Done. Press Any Key to Continue\r\n");
+                scanf("%c", &cmd);
+                break;
+                
             default:    
                 break;
         }
@@ -173,7 +177,74 @@ int main ( void )
 
     return ( EXIT_FAILURE );
 }
+/*
+ * Demo APIs
+ * 
+ */
 
+/*
+ * App Configuration
+ */
+bool configLED(DRV_APA102_PAYLOAD_LED_FRAME* userData)
+{
+//    uint8_t index;
+//    uint32_t tmp;
+//    
+//    printf("Enter LED Index: ");
+//    scanf("%u\r\n", (unsigned int*) &index);
+//    
+//    //Brightness 
+//    printf("Enter LED %u Brightness: ",index);
+//    scanf("%30u\r\n", (unsigned int*) &tmp);    
+//    if(tmp < 0 || tmp > 31)
+//    {
+//        printf("ERROR: Brightness outside of range\r\n");
+//        return false;
+//    }
+//    userData->ledBrightness = tmp;
+//    
+//    //Red
+//    printf("Enter LED %u Red: ",index);
+//    scanf("%255u\r\n", (unsigned int*) &tmp);  
+//    if(tmp < 0 || tmp > 255)
+//    {
+//        printf("ERROR: red value is outside of range\r\n");
+//        return false;
+//    }
+//    userData->red = tmp;
+//            
+//    //Green
+//    printf("Enter LED %u Green: ",index);
+//    scanf("%255u\r\n", (unsigned int*) &tmp);  
+//    if(tmp < 0 || tmp > 255)
+//    {
+//        printf("ERROR: Green value is outside of range\r\n");
+//        return false;
+//    }
+//    userData->green = tmp;
+//    
+//    //Blue
+//    printf("Enter LED %u Blue: ",index);
+//    scanf("%255u\r\nc", (unsigned int*) &tmp);  
+//    if(tmp < 0 || tmp > 255)
+//    {
+//        printf("ERROR: Blue value is outside of range\r\n");
+//        return false;
+//    }
+//    userData->blue = tmp;
+    
+    //Hardcoded for now
+    uint8_t i = 0;
+    for (i = 0; i <= 2; i++)
+    {
+        userData[i].ledBrightness = 30;
+    }
+    userData[0].red = 255;
+    userData[1].green = 255;
+    userData[2].blue = 255;
+    
+    return true;
+}
 
 /*******************************************************************************
  End of File

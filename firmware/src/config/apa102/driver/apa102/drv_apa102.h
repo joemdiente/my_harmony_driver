@@ -30,21 +30,28 @@
 #include "drv_apa102_definitions.h"
 #include "system/system_module.h"
 
-//Public API interface, function declarations
+// *****************************************************************************
+// *****************************************************************************
+// Section: DRV_APA102 Public Functions
+// *****************************************************************************
+// *****************************************************************************
+//Driver Handling and Configuration
 SYS_MODULE_OBJ DRV_APA102_Initialize(const SYS_MODULE_INDEX drvIndex, const SYS_MODULE_INIT* const init);
-
 DRV_HANDLE DRV_APA102_Open(const SYS_MODULE_INDEX drvIndex, const DRV_IO_INTENT ioIntent);
-
 void DRV_APA102_Close(const DRV_HANDLE handle);
-
-DRV_APA102_PAYLOAD_LED_FRAME* DRV_APA102_AllocateBuffer(const DRV_HANDLE handle);
-
 void DRV_APA102_EventHandlerSet(const DRV_HANDLE handle, const DRV_APA102_APP_CALLBACK callback, const uintptr_t context);
-
 bool DRV_APA102_ConfigSet(const DRV_HANDLE handle, DRV_APA102_CONFIG_PARAMS* config);
 
-bool DRV_APA102_InitializeLED(const DRV_HANDLE handle);
+//Driver Memory Allocation and Manipulation APIs
+bool DRV_APA102_AllocateBuffer(const DRV_HANDLE handle);
+DRV_APA102_PAYLOAD_LED_FRAME* DRV_APA102_GetLedFramePtrAtIndex (const DRV_HANDLE handle, DRV_APA102_LIST_INDEX index);
 
+//Driver Write APIs
+bool DRV_APA102_InitializeLED(const DRV_HANDLE handle);
+bool DRV_APA102_WriteLEDs(const DRV_HANDLE handle, DRV_APA102_PAYLOAD_LED_FRAME* data);
+bool DRV_APA102_TestWrite(const DRV_HANDLE handle);
+
+bool DRV_APA102_InstructionWriter(const DRV_HANDLE handle, DRV_APA102_PAYLOAD_LED_FRAME* rgbData, uint32_t index);
 //bool DRV_APA102_WriteArray(const DRV_HANDLE handle, DRV_APA102_RGB_ARRAY* rgbArr);
 #endif /* _DRV_APA102_H */
 

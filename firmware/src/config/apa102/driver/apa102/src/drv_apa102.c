@@ -106,19 +106,19 @@ bool _DRV_APA102_UpdateLEDs (const DRV_HANDLE handle)
     }
     
     //Format the allocated memory; Ensures LED Frames are always formatted before proceeding with write
-    dObj->ptrPayload[0] = SFRAME_VAL;                                       //Start Frame 0s*32
-    dObj->ptrPayload[dObj->drvConf.ledCnt] = EFRAME_VAL;                    //End Frame 1s*32 (Last Index is NULL so use it as End Frame)
+    dObj->currPtrPayload[0] = SFRAME_VAL;                                       //Start Frame 0s*32
+    dObj->currPtrPayload[dObj->drvConf.ledCnt] = EFRAME_VAL;                    //End Frame 1s*32 (Last Index is NULL so use it as End Frame)
     
     //Ensure all padding bits are 1s
     uint32_t i;
-    DRV_APA102_PAYLOAD_LED_FRAME* initLEDFrames = (DRV_APA102_PAYLOAD_LED_FRAME*)&dObj->ptrPayload[1];
+    DRV_APA102_PAYLOAD_LED_FRAME* initLEDFrames = (DRV_APA102_PAYLOAD_LED_FRAME*)&dObj->currPtrPayload[1];
     for(i = 0; i < dObj->drvConf.ledCnt; i++)
     {
         initLEDFrames[i].padBits = 0b111;
     }
     
     /* Write to PLib */
-    if(dObj->plibInterface->write((uint8_t*)dObj->ptrPayload, dObj->sizePayload) != true)
+    if(dObj->plibInterface->write((uint8_t*)dObj->currPtrPayload, dObj->sizePayload) != true)
     {
 #ifdef DRV_APA102_DEBUG
         printf("ERROR: plibInterface Write Failed.\r\n");
@@ -133,15 +133,51 @@ bool _DRV_APA102_UpdateLEDs (const DRV_HANDLE handle)
     }
     return true;
 }
+bool _DRV_APA102_LEDSequencer (const DRV_HANDLE handle)
+{
+    return true;
+}
 // *****************************************************************************
 // *****************************************************************************
 // Section: DRV_APA102 Public Functions
 // *****************************************************************************
 // *****************************************************************************
-bool DRV_APA102_LEDSequencer (const DRV_HANDLE handle)
+
+//bool DRV_APA102_TestWrite (const DRV_HANDLE handle)
+//{
+//    _DRV_APA102_UpdateLEDs(handle);
+//    return true;
+//}
+//bool DRV_APA102_InstructionWriter(const DRV_HANDLE handle, DRV_APA102_PAYLOAD_LED_FRAME* rgbData, uint32_t index)
+//{
+//    DRV_APA102_OBJ* dObj     = NULL;
+//    
+//    if (handle >= DRV_APA102_INSTANCES_NUMBER)
+//    {
+//        return (DRV_APA102_PAYLOAD_LED_FRAME*)NULL;
+//    }
+//    
+//    dObj = &gDrvAPA102Obj[handle];
+//    
+//    return true;
+//}
+bool DRV_APA102_WriteLEDs(const DRV_HANDLE handle, DRV_APA102_PAYLOAD_LED_FRAME* data)
 {
+    DRV_APA102_OBJ* dObj     = NULL;
+    
+    if (handle >= DRV_APA102_INSTANCES_NUMBER)
+    {
+        return (DRV_APA102_PAYLOAD_LED_FRAME*)NULL;
+    }
+    
+    dObj = &gDrvAPA102Obj[handle];
+    memcpy(dObj->currPtrPayload, data, dObj->sizePayload);
+    
     return true;
 }
+/*
+ * 
+ */
 bool DRV_APA102_InitializeLED(const DRV_HANDLE handle)
 {
     DRV_APA102_OBJ* dObj     = NULL;
@@ -161,45 +197,71 @@ bool DRV_APA102_InitializeLED(const DRV_HANDLE handle)
     dObj = &gDrvAPA102Obj[handle];
     
     //Initialize memory
-    memset(dObj->ptrPayload,0,dObj->sizePayload);
+    memset(dObj->currPtrPayload,0,dObj->sizePayload);
     
     _DRV_APA102_UpdateLEDs(handle);
 
     return true;
 }
-
-/* 
- * APA102 Dynamic Buffer Allocation
- * based on LED count 
+/*
+ * 
  */
-DRV_APA102_PAYLOAD_LED_FRAME* DRV_APA102_AllocateBuffer(const DRV_HANDLE handle)
+DRV_APA102_PAYLOAD_LED_FRAME* DRV_APA102_GetLedFramePtrAtIndex (const DRV_HANDLE handle, DRV_APA102_LIST_INDEX index)
 {
     DRV_APA102_OBJ* dObj     = NULL;
     
     if (handle >= DRV_APA102_INSTANCES_NUMBER)
     {
-        return (DRV_APA102_PAYLOAD_LED_FRAME*)NULL;
+        return false;
+    }
+    
+    dObj = &gDrvAPA102Obj[handle];
+    
+    //Get LED Frame Pointer Starting at Index 0
+    return (DRV_APA102_PAYLOAD_LED_FRAME*) 
+            (dObj->drvBuffer + 
+            1 +                     //LED Frame is Index 1 of Payload
+            (dObj->sizePayload/4) * index);
+}
+/* 
+ * APA102 Dynamic Buffer Allocation
+ * based on LED count and number of LED Instruction
+ */
+bool DRV_APA102_AllocateBuffer(const DRV_HANDLE handle)
+{
+    DRV_APA102_OBJ* dObj     = NULL;
+    
+    if (handle >= DRV_APA102_INSTANCES_NUMBER)
+    {
+        return false;
     }
     
     dObj = &gDrvAPA102Obj[handle];
     
     /* Memory Allocation */
-    //Calculate needed memory
+    //Single Payload
     dObj->sizePayload = (DRV_APA102_PAYLOAD_SIZE)( 
-            (sizeof(DRV_APA102_PAYLOAD_LED_FRAME)*(dObj->drvConf.ledCnt - 1)) 
+            (sizeof(DRV_APA102_PAYLOAD_LED_FRAME)*(dObj->drvConf.ledCnt)) 
             + sizeof(DRV_APA102_PAYLOAD_START_FRAME) 
             + sizeof(DRV_APA102_PAYLOAD_END_FRAME)
             );
-
-    //Allocate memory
-    dObj->ptrPayload = OSAL_Malloc((size_t)dObj->sizePayload);
-
-    if(dObj->ptrPayload != NULL)
-    {
-        dObj->isBufferAllocated = true;
-    }
     
-    return (DRV_APA102_PAYLOAD_LED_FRAME*)&dObj->ptrPayload[1];
+    //List of Instructions
+    dObj->sizeList = dObj->sizePayload * dObj->drvConf.instructionCnt;
+    
+    //Allocate memory for payload only
+    dObj->drvBuffer = OSAL_Malloc((size_t)dObj->sizeList);
+    
+    if(dObj->drvBuffer != NULL)
+    {
+        dObj->currPtrPayload = dObj->drvBuffer;
+        dObj->isBufferAllocated = true;
+        printf("INFO: current payload addr: %p\r\n", (void*)dObj->currPtrPayload);
+        memset(dObj->drvBuffer,0xFF,dObj->sizeList);
+        return true;
+    }        
+    
+    return false;
 }
 /* 
  * APA102 Driver Configuration Setup 
@@ -222,6 +284,13 @@ bool DRV_APA102_ConfigSet(const DRV_HANDLE handle, DRV_APA102_CONFIG_PARAMS* con
     {
         return SYS_MODULE_OBJ_INVALID;
     }
+    
+    //Check Number of Instruction
+    if (config->instructionCnt <= 0)
+    {
+        return SYS_MODULE_OBJ_INVALID;
+    }
+    
     //Check Clock Frequency
     if (config->transferParams.clkFreq >= DRV_APA102_MAX_CLK ||
             config->transferParams.clkFreq <= DRV_APA102_MIN_CLK)
@@ -249,7 +318,7 @@ bool DRV_APA102_ConfigSet(const DRV_HANDLE handle, DRV_APA102_CONFIG_PARAMS* con
     dObj->plibInterface->transferSetup(&dObj->drvConf.transferParams,0);
     dObj->isSetupChanged = true;
     
-    return false;
+    return true;
 }
 /*
  * APA102 Driver Event Handler Setup

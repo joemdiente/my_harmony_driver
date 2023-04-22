@@ -111,7 +111,8 @@ typedef struct
 /* Configuration */
 typedef struct
 {
-    uint32_t ledCnt;   
+    uint32_t ledCnt;  
+    uint32_t instructionCnt;
     DRV_APA102_TRANSFER_SETUP transferParams;
     DRV_APA102_MODE drvOper;
 }DRV_APA102_CONFIG_PARAMS;
@@ -155,11 +156,22 @@ typedef enum
     EFRAME_VAL = 0xFFFFFFFF,  
 } DRV_APA102_FRAME_TYPE;
 
-typedef uint16_t DRV_APA102_PAYLOAD_SIZE;
+/*  General Idea:
+ *  [---------List---------]
+ *  [Instruction#] [Payload]
+ *        1        [0][x][1]
+ *        2        [0][x][1]
+ *      .....
+ *        n        [0][x][1]
+ */
+typedef uint32_t DRV_APA102_PAYLOAD_SIZE;
 typedef uint32_t DRV_APA102_PAYLOAD_PTR; 
+typedef uint32_t DRV_APA102_INSTRUCTION_PTR;
+typedef uint32_t DRV_APA102_LIST_SIZE;
+typedef uint32_t DRV_APA102_LIST_INDEX;
 
-//Multiple Payload Pointer
-typedef DRV_APA102_PAYLOAD_PTR* DRV_APA102_PAYLOAD_LED_INSTRUCTION;
+/* Main Driver Buffer */
+typedef uint32_t DRV_APA102_BUFFER_PTR;
 
 // function prototype of application callback function
 typedef void (*DRV_APA102_APP_CALLBACK)(DRV_APA102_EVENT event, uintptr_t context);
