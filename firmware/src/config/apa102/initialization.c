@@ -69,9 +69,6 @@ const DRV_APA102_PLIB_INTERFACE gDrvAPA102PLIBIntf[1] =
         .transferSetup = (DRV_APA102_PLIB_SPI_TRANSFER_SETUP)FLEXCOM7_SPI_TransferSetup,
         .spiCallbackRegister = (DRV_APA102_PLIB_SPI_CALLBACK_REGISTER)FLEXCOM7_SPI_CallbackRegister,
         .IsBusy = (DRV_APA102_PLIB_SPI_ISBUSY)FLEXCOM7_SPI_IsBusy,
-        .startTc = (DRV_APA102_PLIB_TC_START)TC0_CH0_TimerStart,
-        .stopTc = (DRV_APA102_PLIB_TC_STOP)TC0_CH0_TimerStop,
-        .tcCallbackRegister = (DRV_APA102_PLIB_TC_CALLBACK_REGISTER)TC0_CH0_TimerCallbackRegister,
     },
 };
 

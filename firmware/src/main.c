@@ -87,11 +87,11 @@ void drvAPA102EventHandler(DRV_APA102_EVENT event, uintptr_t context)
 }
 
 /*
- * Demo App LED Fade
+ * 1. Demo App LED Fade
  */
 void demoLEDFade(void)
 {
-//    printf ("\33[H\33[2J");
+    printf ("\33[H\33[2J");
     printf("Setting up Instructions for Fading LED Demo\r\n");
     
     uint8_t i, x=0;
@@ -111,11 +111,14 @@ void demoLEDFade(void)
         if(x > 31) x = 0;
     }
     printf("Press Any Key to Exit\r\n");
-    scanf("%c", &cmd);
 }
 void demoLEDBlink(void)
 {
+    printf ("\33[H\33[2J");
+    printf("Blink LEDs every 1 Sec. Demo\r\n");
     
+    printf("Press Any Key to Stop\r\n");
+    scanf("%c", &cmd);
 }
 bool configLED(DRV_APA102_PAYLOAD_LED_FRAME* userData);
 
@@ -158,15 +161,11 @@ int main ( void )
                 break;
 
             case CMD_LED_DEMO_BLINK:
-                printf ("\33[H\33[2J");
-                printf("Blink LEDs every 1 Sec. Demo\r\n");
-                printf("Press Any Key to Stop\r\n");
                 demoLEDBlink();
-                scanf("%c", &cmd);
                 break;
 
             case CMD_LED_INSTRUCTIONS_RUN:
-                DRV_APA102_Instruction_Run(rgbHandle, 5, REPEAT);
+                DRV_APA102_Instruction_Start(rgbHandle, 5, REPEAT);
                 break;
                 
             case CMD_LED_INSTRUCTIONS_STOP:

@@ -15,6 +15,7 @@
 #include "driver/apa102/drv_apa102.h"
 #include "driver/apa102/drv_apa102_local.h"
 #include "osal/osal_impl_basic.h"
+#include "peripheral/pio/plib_pio.h"
 #include <stdbool.h>
 #include <string.h>
 #include <stdio.h>
@@ -37,17 +38,20 @@ DRV_APA102_OBJ gDrvAPA102Obj[DRV_APA102_INSTANCES_NUMBER];
 // *****************************************************************************
 
 /* 
- * APA102 Driver PLIBEventHandler
+ * APA102 Driver SPI PLIBEventHandler
  * ::This is called whenever one SPI transfer is finished.
  */
-static void DRV_APA102_PLIBEventHandler(uintptr_t contextHandle)
+static void _DRV_APA102_PLIB_SPI_EventHandler(uintptr_t context)
 {
-    DRV_APA102_OBJ* dObj     = (DRV_APA102_OBJ*) contextHandle;
+    DRV_APA102_OBJ* dObj     = (DRV_APA102_OBJ*) context;
 
+    dObj = &gDrvAPA102Obj[context];
+    
     if(dObj->isRunning == true)
-    {
-        //One Instruction was executed
+    {      
+        //One instruction was already executed
         dObj->currInstructionIndex++;
+        
         if(dObj->currInstructionIndex >= dObj->totalInstruction && dObj->shouldRepeat == true)
         {
             //Reset Instruction Index
@@ -60,8 +64,6 @@ static void DRV_APA102_PLIBEventHandler(uintptr_t contextHandle)
                 dObj->drvBuffer +
                 (dObj->sizePayload/4) * 
                 dObj->currInstructionIndex);
-            // Write to PLib
-            dObj->plibInterface->write((uint8_t*)dObj->currPtrPayload, dObj->sizePayload);
         }
         else
         {
@@ -70,9 +72,8 @@ static void DRV_APA102_PLIBEventHandler(uintptr_t contextHandle)
             dObj->isRunning = false;
             dObj->isBusy = false;
         }
+        dObj->inProgress = false;
     }
-    
-
 }
 /* 
  * APA102 Update LEDs
@@ -134,8 +135,31 @@ bool _DRV_APA102_FormatAllFrames (const DRV_HANDLE handle)
 // Section: DRV_APA102 Public Functions
 // *****************************************************************************
 // *****************************************************************************
+/* 
+ * APA102 Driver Trigger Update
+ * ::Calls to this function will increment pointer 
+ */
+bool DRV_APA102_Instruction_Update(const DRV_HANDLE handle)
+{
+    DRV_APA102_OBJ* dObj     = NULL;
+    
+    if (handle >= DRV_APA102_INSTANCES_NUMBER)
+    {
+        return NULL;
+    }
+    
+    dObj = &gDrvAPA102Obj[handle];
+    
+    if(dObj->isRunning == true && dObj->inProgress == false)
+    {
+        dObj->plibInterface->write((uint8_t*)dObj->currPtrPayload, dObj->sizePayload);
+        dObj->inProgress = true;
+    }
+    
+    return true;
+}
 /*
- * APA102 Driver Run Instruction
+ * APA102 Driver Stop Instruction
  */
 bool DRV_APA102_Instruction_Stop(const DRV_HANDLE handle)
 {
@@ -151,13 +175,14 @@ bool DRV_APA102_Instruction_Stop(const DRV_HANDLE handle)
     dObj->shouldRepeat = false;
     dObj->isRunning = false;
     dObj->isBusy = false;
+    dObj->inProgress = false;
     
     return true;
 }
 /*
- * APA102 Driver Run Instruction
+ * APA102 Driver Start Instruction
  */
-bool DRV_APA102_Instruction_Run(const DRV_HANDLE handle, uint16_t cntInstruction, DRV_APA102_INSTRUCTION_FREQUENCY freq)
+bool DRV_APA102_Instruction_Start(const DRV_HANDLE handle, uint16_t cntInstruction, DRV_APA102_INSTRUCTION_FREQUENCY freq)
 {
     DRV_APA102_OBJ* dObj     = NULL;
     
@@ -191,17 +216,18 @@ bool DRV_APA102_Instruction_Run(const DRV_HANDLE handle, uint16_t cntInstruction
     dObj->shouldRepeat = freq;
     dObj->isBusy = true;
     dObj->isRunning = true;
-
+    dObj->inProgress = false;
+    
     _DRV_APA102_FormatAllFrames(handle); 
     
-    /* Write to PLib */
-    if(dObj->plibInterface->write((uint8_t*)dObj->currPtrPayload, dObj->sizePayload) != true)
-    {
-#ifdef DRV_APA102_DEBUG
-        printf("ERROR: plibInterface Failed!\r\n");
-#endif
-        return SYS_MODULE_OBJ_INVALID;
-    }
+    //    /* Write to PLib */
+//    if(dObj->plibInterface->write((uint8_t*)dObj->currPtrPayload, dObj->sizePayload) != true)
+//    {
+//#ifdef DRV_APA102_DEBUG
+//        printf("ERROR: plibInterface Failed!\r\n");
+//#endif
+//        return SYS_MODULE_OBJ_INVALID;
+//    }
             
     return true;
 }
@@ -222,7 +248,7 @@ bool DRV_APA102_InitializeLED(const DRV_HANDLE handle)
     //Initialize memory
     memset(dObj->drvBuffer, 0,dObj->sizePayload);
     
-    DRV_APA102_Instruction_Run(handle, 1, 0);
+    DRV_APA102_Instruction_Start(handle, 1, ONCE);
             
     return true;
 }
@@ -279,9 +305,6 @@ bool DRV_APA102_AllocateBuffer(const DRV_HANDLE handle)
     if(dObj->drvBuffer != NULL)
     {
         dObj->isBufferAllocated = true;
-#ifdef DRV_APA102_DEBUG
-        printf("INFO: Buffer addr: %p\r\n", (void*)dObj->drvBuffer);
-#endif
         memset(dObj->drvBuffer,0,dObj->sizeBuffer);
         return true;
     }        
@@ -341,7 +364,6 @@ bool DRV_APA102_ConfigSet(const DRV_HANDLE handle, DRV_APA102_CONFIG_PARAMS* con
     dObj->drvConf.transferParams.dataBits = DRV_APA102_DATA_BITS_8;
     
     dObj->plibInterface->transferSetup(&dObj->drvConf.transferParams,0);
-    dObj->isSetupChanged = true;
     
     return true;
 }
@@ -445,7 +467,7 @@ SYS_MODULE_OBJ DRV_APA102_Initialize(
     
     /* Initialize pLibInterface */
     dObj->plibInterface = APA102Init->plibInterface;
-    dObj->plibInterface->spiCallbackRegister(DRV_APA102_PLIBEventHandler, (uintptr_t)dObj);
+    dObj->plibInterface->spiCallbackRegister(_DRV_APA102_PLIB_SPI_EventHandler, dObj->context);
     
     /* Initialize Driver Variables  */
     dObj->isBusy = false;
@@ -453,6 +475,8 @@ SYS_MODULE_OBJ DRV_APA102_Initialize(
     
     dObj->isBufferAllocated = false;
     dObj->isRunning = false;
+    dObj->inProgress = false;
+
     
     dObj->isInitialized = true;
     return (SYS_MODULE_OBJ)drvIndex;

@@ -34,10 +34,9 @@ typedef struct
 {
     bool isInitialized;
     bool isBusy;    
-    bool wrInProgress;
-    bool isSetupChanged;
     bool isBufferAllocated;
     bool isRunning;
+    bool inProgress;
     bool shouldRepeat;
     uint8_t nClients;
     uintptr_t context;

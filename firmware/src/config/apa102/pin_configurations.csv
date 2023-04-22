@@ -115,7 +115,7 @@ R13,PA23,,Available,In,,,,,,,
 R14,PA30,,Available,In,,,,,,,
 R16,PB13,,Available,In,,,,,,,
 T14,PA28,,Available,In,,,,,,,
-T18,PB8,,Available,In,,,,,,,
+T18,PB8,GPIO_PB8,GPIO,Out,High,No,Disabled,No,No,Glitch Filter,0
 T19,PB6,,Available,In,,,,,,,
 T20,PB4,,Available,In,,,,,,,
 T21,PB2,,Available,In,,,,,,,
