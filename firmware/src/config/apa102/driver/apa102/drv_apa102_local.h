@@ -38,6 +38,7 @@ typedef struct
     bool isRunning;
     bool inProgress;
     bool shouldRepeat;
+    bool updateNow;
     uint8_t nClients;
     uintptr_t context;
     
