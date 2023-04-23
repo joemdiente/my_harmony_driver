@@ -77,24 +77,16 @@ typedef enum
     DRV_APA102_CS_POLARITY_ACTIVE_HIGH = 1
 
 } DRV_APA102_CS_POLARITY;
-typedef enum
-{
-    DRV_APA102_ERROR_NONE = 0,
-    DRV_APA102_ERROR_BUS,
-} DRV_APA102_ERROR;
 
+/* Driver Events */
 typedef enum
 {
     DRV_APA102_EVENT_NONE = 0,
-    DRV_APA102_EVENT_WRITE_DONE,
-    DRV_APA102_EVENT_WRITE_ERROR,
+    DRV_APA102_EVENT_RUNNING,
+    DRV_APA102_EVENT_PENDING,
+    DRV_APA102_EVENT_STOPPED,
 } DRV_APA102_EVENT;
 
-typedef enum
-{
-    DRV_APA102_LED_STRIP = 0,
-    DRV_APA102_LED_ARRAY,
-} DRV_APA102_MODE;
 
 /* SPI Configuration 
  * APA102-2020 Data Sheet
@@ -108,12 +100,12 @@ typedef struct
     DRV_APA102_DATA_BITS   dataBits;
 } DRV_APA102_TRANSFER_SETUP;
 
-/* Configuration */
+/* APA102 Driver Configuration */
 typedef struct
 {
-    uint32_t ledCnt;   
+    uint32_t ledMaxCnt;  
+    uint32_t instrMaxCnt;
     DRV_APA102_TRANSFER_SETUP transferParams;
-    DRV_APA102_MODE drvOper;
 }DRV_APA102_CONFIG_PARAMS;
 
 /* APA102 Protocols [32 bits/frame]
@@ -146,7 +138,7 @@ typedef struct __attribute__((__packed__))
     uint8_t blue          :8;
     uint8_t green         :8;
     uint8_t red           :8;
-} DRV_APA102_PAYLOAD_LED_FRAMES;
+} DRV_APA102_LED_FRAME;
 typedef uint32_t DRV_APA102_PAYLOAD_START_FRAME;
 typedef uint32_t DRV_APA102_PAYLOAD_END_FRAME;
 typedef enum
@@ -155,8 +147,35 @@ typedef enum
     EFRAME_VAL = 0xFFFFFFFF,  
 } DRV_APA102_FRAME_TYPE;
 
+/*  General Idea:
+ *  [---------Buffer--------]
+ *  [Instruction#] [Payload]
+ *        0        [0][x][1]
+ *        1        [0][x][1]
+ *      .....
+ *        n        [0][x][1]
+ */
 typedef uint16_t DRV_APA102_PAYLOAD_SIZE;
 typedef uint32_t DRV_APA102_PAYLOAD_PTR; 
+typedef uint32_t DRV_APA102_INSTRUCTION_PTR;
+typedef uint16_t DRV_APA102_INSTRUCTION_INDEX;
+typedef uint16_t DRV_APA102_BUFFER_SIZE;
+typedef uint32_t DRV_APA102_LIST_INDEX;
+
+/* Instruction Parameters */
+typedef enum
+{
+    ONCE = 0,
+    REPEAT,
+} DRV_APA102_INSTRUCTION_FREQUENCY;
+typedef uint16_t DRV_APA102_INSTRUCTION_COUNT;
+typedef struct 
+{
+    DRV_APA102_INSTRUCTION_FREQUENCY instrFreq;
+    DRV_APA102_INSTRUCTION_COUNT instrCnt;
+} DRV_APA102_INSTRUCTION_CONFIG;
+/* Main Driver Buffer */
+typedef uint32_t DRV_APA102_BUFFER_PTR;
 
 // function prototype of application callback function
 typedef void (*DRV_APA102_APP_CALLBACK)(DRV_APA102_EVENT event, uintptr_t context);
@@ -165,18 +184,18 @@ typedef void (*DRV_APA102_APP_CALLBACK)(DRV_APA102_EVENT event, uintptr_t contex
 typedef void (* DRV_APA102_PLIB_CALLBACK)( uintptr_t context);
 
 // function prototypes of PLIB APIs
-typedef bool (* DRV_APA102_PLIB_WRITE)( uint8_t*, uint16_t);
-typedef bool (* DRV_APA102_PLIB_TRANSFER_SETUP)(DRV_APA102_TRANSFER_SETUP* setup, uint32_t srcClkFreq);
-typedef void (* DRV_APA102_PLIB_CALLBACK_REGISTER)(DRV_APA102_PLIB_CALLBACK, uintptr_t);
+typedef bool (* DRV_APA102_PLIB_SPI_WRITE)( uint8_t*, uint16_t);
+typedef bool (* DRV_APA102_PLIB_SPI_TRANSFER_SETUP)(DRV_APA102_TRANSFER_SETUP* setup, uint32_t srcClkFreq);
+typedef void (* DRV_APA102_PLIB_SPI_CALLBACK_REGISTER)(DRV_APA102_PLIB_CALLBACK, uintptr_t);
 typedef bool (* DRV_APA102_PLIB_ISTRANSMITTERBUSY)(void);
-typedef bool (* DRV_APA102_PLIB_ISBUSY)(void);
+typedef bool (* DRV_APA102_PLIB_SPI_ISBUSY)(void);
 
 typedef struct
 {
-    DRV_APA102_PLIB_WRITE                          write;
-    DRV_APA102_PLIB_TRANSFER_SETUP                 transferSetup;
-    DRV_APA102_PLIB_CALLBACK_REGISTER              callbackRegister;  
-    DRV_APA102_PLIB_ISBUSY                         IsBusy;
+    DRV_APA102_PLIB_SPI_WRITE                          write;
+    DRV_APA102_PLIB_SPI_TRANSFER_SETUP                 transferSetup;
+    DRV_APA102_PLIB_SPI_CALLBACK_REGISTER              spiCallbackRegister;  
+    DRV_APA102_PLIB_SPI_ISBUSY                         IsBusy;    
 } DRV_APA102_PLIB_INTERFACE;
 
 typedef struct

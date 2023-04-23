@@ -56,19 +56,19 @@
 #include "peripheral/mmu/plib_mmu.h"
 #include "peripheral/matrix/plib_matrix.h"
 #include "peripheral/pio/plib_pio.h"
-#include "peripheral/flexcom/spi/master/plib_flexcom9_spi_master.h"
 #include "peripheral/flexcom/usart/plib_flexcom3_usart.h"
-#include "driver/spi_flash/at25df/drv_at25df.h"
+#include "peripheral/tc/plib_tc0.h"
 #include "system/int/sys_int.h"
 #include "system/ports/sys_ports.h"
 #include "system/cache/sys_cache.h"
+#include "system/dma/sys_dma.h"
 #include "system/reset/sys_reset.h"
 #include "osal/osal.h"
 #include "system/debug/sys_debug.h"
 #include "app.h"
 
+#include "driver/apa102/drv_apa102.h"
 #include "driver/apa102/drv_apa102_definitions.h"
-
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
@@ -191,10 +191,7 @@ Remarks:
 
 typedef struct
 {
-    /* AT25DF Driver Object */
-    SYS_MODULE_OBJ drvAT25DF;
-
-
+    char RESERVED;
 } SYSTEM_OBJECTS;
 
 // *****************************************************************************

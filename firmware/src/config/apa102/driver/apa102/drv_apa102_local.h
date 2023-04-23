@@ -34,9 +34,11 @@ typedef struct
 {
     bool isInitialized;
     bool isBusy;    
-    bool wrInProgress;
-    bool isSetupChanged;
     bool isBufferAllocated;
+    bool isRunning;
+    bool inProgress;
+    bool shouldRepeat;
+    bool updateNow;
     uint8_t nClients;
     uintptr_t context;
     
@@ -46,9 +48,12 @@ typedef struct
     DRV_APA102_EVENT event;
     
     /* Data Containers */    
-    DRV_APA102_PAYLOAD_PTR* ptrPayload;
+    DRV_APA102_BUFFER_PTR* drvBuffer;
+    DRV_APA102_BUFFER_SIZE sizeBuffer;
+    DRV_APA102_PAYLOAD_PTR* currPtrPayload;
     DRV_APA102_PAYLOAD_SIZE sizePayload;
-
+    DRV_APA102_INSTRUCTION_INDEX currInstructionIndex;
+    DRV_APA102_INSTRUCTION_INDEX totalInstruction;
     
 }DRV_APA102_OBJ;
 

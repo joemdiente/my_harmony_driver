@@ -46,7 +46,6 @@
 #include "configuration.h"
 #include "definitions.h"
 #include "device.h"
-#include "driver/apa102/drv_apa102.h"
 
 
 
@@ -66,10 +65,10 @@
 const DRV_APA102_PLIB_INTERFACE gDrvAPA102PLIBIntf[1] = 
 {
     {
-        .write = (DRV_APA102_PLIB_WRITE)FLEXCOM7_SPI_Write,
-        .transferSetup = (DRV_APA102_PLIB_TRANSFER_SETUP)FLEXCOM7_SPI_TransferSetup,
-        .callbackRegister = (DRV_APA102_PLIB_CALLBACK_REGISTER)FLEXCOM7_SPI_CallbackRegister,
-        .IsBusy = (DRV_APA102_PLIB_ISBUSY)FLEXCOM7_SPI_IsBusy,
+        .write = (DRV_APA102_PLIB_SPI_WRITE)FLEXCOM7_SPI_Write,
+        .transferSetup = (DRV_APA102_PLIB_SPI_TRANSFER_SETUP)FLEXCOM7_SPI_TransferSetup,
+        .spiCallbackRegister = (DRV_APA102_PLIB_SPI_CALLBACK_REGISTER)FLEXCOM7_SPI_CallbackRegister,
+        .IsBusy = (DRV_APA102_PLIB_SPI_ISBUSY)FLEXCOM7_SPI_IsBusy,
     },
 };
 
@@ -79,47 +78,6 @@ const DRV_APA102_INIT gDrvAPA102InitObj[1] =
         .plibInterface = &gDrvAPA102PLIBIntf[0],
     },
 };
-/* SPI PLIB Interface Initialization for AT25DF Driver */
-const DRV_AT25DF_PLIB_INTERFACE drvAT25DFPlibAPI = {
-
-    /* SPI PLIB WriteRead function */
-    .writeRead = (DRV_AT25DF_PLIB_WRITE_READ)FLEXCOM9_SPI_WriteRead,
-
-    /* SPI PLIB Write function */
-    .write = (DRV_AT25DF_PLIB_WRITE)FLEXCOM9_SPI_Write,
-    
-    /* SPI PLIB Read function */
-    .read = (DRV_AT25DF_PLIB_READ)FLEXCOM9_SPI_Read,
-
-    /* SPI PLIB Transfer Status function */
-    .isBusy = (DRV_AT25DF_PLIB_IS_BUSY)FLEXCOM9_SPI_IsBusy,
-    
-    /* SPI PLIB Callback Register */
-    .callbackRegister = (DRV_AT25DF_PLIB_CALLBACK_REGISTER)FLEXCOM9_SPI_CallbackRegister,
-};
-    
-/* AT25DF Driver Initialization Data */
-const DRV_AT25DF_INIT drvAT25DFInitData =
-{
-    /* SPI PLIB API  interface*/
-    .spiPlib = &drvAT25DFPlibAPI,
-                
-    /* AT25DF Number of clients */
-    .numClients = DRV_AT25DF_CLIENTS_NUMBER_IDX,
-
-    /* FLASH Page Size in bytes */
-    .pageSize = DRV_AT25DF_PAGE_SIZE,
-    
-    /* Total size of the FLASH in bytes */
-    .flashSize = DRV_AT25DF_FLASH_SIZE,
-    
-    .blockStartAddress = 0x0,
-    
-    .chipSelectPin = DRV_AT25DF_CHIP_SELECT_PIN_IDX
-};
-
-
-
 // *****************************************************************************
 // *****************************************************************************
 // Section: System Data
@@ -204,19 +162,16 @@ void SYS_Initialize ( void* data )
 
     FLEXCOM7_SPI_Initialize();
 
-    FLEXCOM9_SPI_Initialize();
-
     FLEXCOM3_USART_Initialize();
 
 
-    sysObj.drvAT25DF = DRV_AT25DF_Initialize(DRV_AT25DF_INDEX, (SYS_MODULE_INIT *)&drvAT25DFInitData);
+    TC0_CH0_TimerInitialize(); 
 
 
 
 
     DRV_APA102_Initialize(0, (SYS_MODULE_INIT *) &gDrvAPA102InitObj[0]);
     
-
 
     APP_Initialize();
 

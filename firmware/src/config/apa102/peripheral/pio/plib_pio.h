@@ -95,6 +95,24 @@
 /*PIO max index */
 #define PIO_PORT_MAX    5U
 
+
+/*** Macros for GPIO_PB8 pin ***/
+#define GPIO_PB8_Set()               (PIOB_REGS->PIO_SODR = (1<<8))
+#define GPIO_PB8_Clear()             (PIOB_REGS->PIO_CODR = (1<<8))
+#define GPIO_PB8_Toggle()            do {\
+                                            PIOB_REGS->PIO_MSKR = (1<<8); \
+                                            PIOB_REGS->PIO_ODSR ^= (1<<8);\
+                                        } while (0)
+#define GPIO_PB8_OutputEnable()      do {\
+                                            PIOB_REGS->PIO_MSKR = (1<<8); \
+                                            PIOB_REGS->PIO_CFGR |=(1 << PIO_CFGR_DIR_Pos);\
+                                        }while(0)
+#define GPIO_PB8_InputEnable()       do { \
+                                            PIOB_REGS->PIO_MSKR = (1<<8); \
+                                            PIOB_REGS->PIO_CFGR &= ~(1 << PIO_CFGR_DIR_Pos);\
+                                        } while (0)
+#define GPIO_PB8_Get()               ((PIOB_REGS->PIO_PDSR >> 8) & 0x1)
+#define GPIO_PB8_PIN                  PIO_PIN_PB8
 // *****************************************************************************
 /* PIO Ports
 
