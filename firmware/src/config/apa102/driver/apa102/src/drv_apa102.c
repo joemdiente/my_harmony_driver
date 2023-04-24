@@ -229,6 +229,10 @@ bool DRV_APA102_Instruction_OperSetup(const DRV_HANDLE handle, DRV_APA102_INSTRU
 
     dObj = &gDrvAPA102Obj[handle];
 
+        if (dObj->isBusy == true || dObj->isRunning == true) {
+        printf("ERROR: Driver is Busy.\r\n");
+        return false;
+    }
     if (instruction_config == NULL) {
         printf("ERROR: instruction config pointer invalid\r\n");
         return false;
