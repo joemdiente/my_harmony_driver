@@ -229,6 +229,10 @@ bool DRV_APA102_Instruction_OperSetup(const DRV_HANDLE handle, DRV_APA102_INSTRU
 
     dObj = &gDrvAPA102Obj[handle];
 
+        if (dObj->isBusy == true || dObj->isRunning == true) {
+        printf("ERROR: Driver is Busy.\r\n");
+        return false;
+    }
     if (instruction_config == NULL) {
         printf("ERROR: instruction config pointer invalid\r\n");
         return false;
@@ -253,7 +257,7 @@ bool DRV_APA102_Instruction_OperSetup(const DRV_HANDLE handle, DRV_APA102_INSTRU
 /*
  * APA102 Driver Initialize All LEDs to 0
  */
-bool DRV_APA102_InitializeLED(const DRV_HANDLE handle) {
+bool DRV_APA102_Instruction_InitializeLED(const DRV_HANDLE handle) {
     DRV_APA102_OBJ* dObj = NULL;
 
     if (handle >= DRV_APA102_INSTANCES_NUMBER) {
@@ -286,7 +290,7 @@ DRV_APA102_LED_FRAME* DRV_APA102_GetLedFramePtrAtIndex(const DRV_HANDLE handle,
     dObj = &gDrvAPA102Obj[handle];
 
     if (dObj->isRunning) {
-        printf("ERROR: Driver is running\r\n");
+        printf("ERROR: Driver is running. Stop the driver first.\r\n");
         return NULL;
     }
     //Get LED Frame Pointer Starting at Index 0
