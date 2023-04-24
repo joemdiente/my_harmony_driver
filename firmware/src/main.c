@@ -113,6 +113,11 @@ void demoLEDFade(void) {
     y = 0;
     for (i = 0; i < 31; i++) {
         rgbData = DRV_APA102_GetLedFramePtrAtIndex(rgbHandle, i);
+        if (rgbData == NULL) {
+            printf("ERROR: LED Frame Pointer Invalid\r\n");
+            break;
+        }
+
         for (x = 0; x < confParam.ledMaxCnt; x++) {
             rgbData[x].ledBrightness = y;
             rgbData[x].red = 255;
@@ -138,7 +143,9 @@ void demoLEDFade(void) {
     printf("Press any key to continue\r\n");
     scanf("%c", &cmd);
 }
-
+/*
+ * Demo App Blink
+ */
 void demoLEDBlink(void) {
 
     printf("\33[H\33[2J");
@@ -154,6 +161,10 @@ void demoLEDBlink(void) {
     /* Fill-up Instruction List for LED Blink Demo */
     for (i = 0; i < confInstr.instrCnt; i++) {
         rgbData = DRV_APA102_GetLedFramePtrAtIndex(rgbHandle, x);
+        if (rgbData == NULL) {
+            printf("ERROR: LED Frame Pointer Invalid\r\n");
+            break;
+        }
 
         for (x = 0; x < confParam.ledMaxCnt; x++) {
             rgbData[x].red = 255;
@@ -192,7 +203,7 @@ int main(void) {
         DRV_APA102_Close(rgbHandle);
     }
 
-    DRV_APA102_InitializeLED(rgbHandle);
+    DRV_APA102_Instruction_InitializeLED(rgbHandle);
 
     while (true) {
         printf("\33[H\33[2J");
@@ -217,7 +228,7 @@ int main(void) {
 
             case CMD_LED_INSTRUCTIONS_STOP:
                 DRV_APA102_Instruction_Stop(rgbHandle);
-                DRV_APA102_InitializeLED(rgbHandle);
+                DRV_APA102_Instruction_InitializeLED(rgbHandle);
                 break;
 
             case CMD_LED_INSTRUCTION_MANUAL_UPDATE:

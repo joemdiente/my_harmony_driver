@@ -148,12 +148,12 @@ typedef enum
 } DRV_APA102_FRAME_TYPE;
 
 /*  General Idea:
- *  [---------Buffer--------]
- *  [Instruction#] [Payload]
- *        0        [0][x][1]
- *        1        [0][x][1]
+ *  [-------Allocated Buffer--------]
+ *  [Instruction#] [---LED Frames---]
+ *        0        [0][x][x][x]...[1]
+ *        1        [0][x][x][x]...[1]
  *      .....
- *        n        [0][x][1]
+ *        n        [0][x][x][x]...[1]
  */
 typedef uint16_t DRV_APA102_PAYLOAD_SIZE;
 typedef uint32_t DRV_APA102_PAYLOAD_PTR; 
