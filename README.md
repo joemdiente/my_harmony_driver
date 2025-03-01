@@ -1,3 +1,6 @@
+# APA102 LED Driver for MPLAB Harmony #
+This is a APA102 Addressable LED driver for Harmony. 
+It is designed in a way that is easily integratable to Harmony Framework
 Pre-requisite:
     Windows
         - Install GNU ARM Embedded Toolchain (required by at91bootstrap)
